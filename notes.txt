@@ -1,0 +1,4 @@
+todo:
+-add pawn promotion
+-add en passante (no idea how to spell it)
+-add castling short and long
