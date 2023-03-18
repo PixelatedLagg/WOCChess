@@ -25,6 +25,24 @@ namespace WOCChess.Game
             WhiteToMove?.Invoke(AllLegalMovesWhite());
         }
 
+        public void Debug()
+        {
+            Console.WriteLine("     0    1    2    3    4    5    6    7\n");
+            for (int i = 0; i < 8; i++)
+            {
+                Console.WriteLine($"{i}    {Format(Board[i, 0])}   {Format(Board[i, 1])}   {Format(Board[i, 2])}   {Format(Board[i, 3])}   {Format(Board[i, 4])}   {Format(Board[i, 5])}   {Format(Board[i, 6])}   {Format(Board[i, 7])}");
+            }
+        }
+
+        private string Format(int i)
+        {
+            if (i > 9)
+            {
+                return $"{i}";
+            }
+            return $"{i} ";
+        }
+
         Move[] AllLegalMovesWhite()
         {
             List<Move> moves = new List<Move>();
