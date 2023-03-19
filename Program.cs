@@ -4,7 +4,6 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Game game = new Game();
-        game.Debug();
+        Bitboard.Debug(0b_1000100000000000000000000000000000000000000000000000000000000000);
     }
 }
