@@ -29,7 +29,7 @@ namespace WOCChess.Game
             WhiteToMove?.Invoke();
         }
 
-        public void Move(int from, int to, int piece)
+        public static void Move(int from, int to, int piece)
         {
             BitBoards[piece] &= ~(1U << from); //reset bit at previous position
             BitBoards[piece] |= 1U << to; //set bit at current position

@@ -4,6 +4,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Bitboard.Debug(Game.BitBoards[0]);
+        Game.Move(7, 4, 3);
+        Bitboard.Debug(Game.BitBoards[3]);
     }
 }
