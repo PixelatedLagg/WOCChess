@@ -12,5 +12,27 @@ namespace WOCChess.Game
                 Console.WriteLine($"{rank[0]}  {rank[1]}  {rank[2]}  {rank[3]}  {rank[4]}  {rank[5]}  {rank[6]}  {rank[7]}");
             }
         }
+        
+        public static ulong ClearRank(Rank rank)
+        {
+            return Convert.ToUInt64($"{String.Concat(Enumerable.Repeat("11111111", 7 - (int)rank))}00000000{String.Concat(Enumerable.Repeat("11111111", (int)rank))}", 2);
+        }
+
+        public static ulong MaskRank(Rank rank)
+        {
+            return Convert.ToUInt64($"{String.Concat(Enumerable.Repeat("00000000", 7 - (int)rank))}11111111{String.Concat(Enumerable.Repeat("00000000", (int)rank))}", 2);
+        }
+
+        public static ulong ClearFile(File file)
+        {
+            string rank = $"{String.Concat(Enumerable.Repeat("1", (int)file))}0{String.Concat(Enumerable.Repeat("1", 7 - (int)file))}";
+            return Convert.ToUInt64($"{rank}{rank}{rank}{rank}{rank}{rank}{rank}{rank}", 2);
+        }
+
+        public static ulong MaskFile(File file)
+        {
+            string rank = $"{String.Concat(Enumerable.Repeat("0", (int)file))}1{String.Concat(Enumerable.Repeat("0", 7 - (int)file))}";
+            return Convert.ToUInt64($"{rank}{rank}{rank}{rank}{rank}{rank}{rank}{rank}", 2);
+        }
     }
 }

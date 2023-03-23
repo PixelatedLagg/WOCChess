@@ -4,6 +4,6 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Bitboard.Debug(Game.BitBoards[10]);
+        Bitboard.Debug(Bitboard.MaskFile(WOCChess.Game.File.A));
     }
 }
