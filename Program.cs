@@ -4,6 +4,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Bitboard.Debug(Bitboard.MaskFile(WOCChess.Game.File.A));
+        Game game = new Game();
+        game.Start();
+        game.UnsafeMove(new Move(11, 27, Piece.Pawn));
+        Bitboard.Debug(game.AllPieces);
     }
 }
