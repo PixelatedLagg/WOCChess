@@ -30,7 +30,13 @@ namespace WOCChess.Game
             WhiteToMove?.Invoke();
         }
 
-        public void UnsafeMove(Move move) //does not check if move is legal
+        public ulong ValidKingMoves(ulong king, ulong side)
+        {
+            ulong kingClipFileH = king & Bitboard.ClearFile(File.H);
+            ulong kingClipFileA = king & Bitboard.ClearFile(File.A);
+
+        }
+        /*public void UnsafeMove(Move move) //does not check if move is legal
         {
             if (Turn) //white move
             {
@@ -70,7 +76,7 @@ namespace WOCChess.Game
                 WhiteToMove?.Invoke();
             }
             Moves.Add(move);
-        }
+        }*/
     }
 }
 
