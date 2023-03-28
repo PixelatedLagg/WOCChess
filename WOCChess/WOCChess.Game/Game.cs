@@ -12,14 +12,14 @@ namespace WOCChess.Game
         public ulong WhiteRooks = 0B_000000000000000000000000000000000000000000000000_00000000_10000001UL;
         public ulong WhiteKnights = 0B_000000000000000000000000000000000000000000000000_00000000_01000010UL;
         public ulong WhiteBishops = 0B_000000000000000000000000000000000000000000000000_00000000_00100100UL;
-        public ulong WhiteQueens = 0B_000000000000000000000000000000000000000000000000_00000000_00010000UL;
-        public ulong WhiteKing = 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
+        public ulong WhiteQueens = 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
+        public ulong WhiteKing = 0B_000000000000000000000000000000000000000000000000_00000000_00010000UL;
         public ulong BlackPawns = 0b_00000000_11111111_000000000000000000000000000000000000000000000000UL;
         public ulong BlackRooks = 0b_10000001_00000000_000000000000000000000000000000000000000000000000UL;
         public ulong BlackKnights = 0b_01000010_00000000_000000000000000000000000000000000000000000000000UL;
         public ulong BlackBishops = 0b_00100100_00000000_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackQueens = 0b_00010000_00000000_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackKing = 0b_00001000_00000000_000000000000000000000000000000000000000000000000UL;
+        public ulong BlackQueens = 0b_00001000_00000000_000000000000000000000000000000000000000000000000UL;
+        public ulong BlackKing = 0b_00010000_00000000_000000000000000000000000000000000000000000000000UL;
 
         public ulong AllWhitePieces => WhitePawns | WhiteRooks | WhiteKnights | WhiteBishops | WhiteQueens | WhiteKing;
         public ulong AllBlackPieces => BlackPawns | BlackRooks | BlackKnights | BlackBishops | BlackQueens | BlackKing;
@@ -34,8 +34,23 @@ namespace WOCChess.Game
         {
             ulong kingClipFileH = king & Bitboard.ClearFile(File.H);
             ulong kingClipFileA = king & Bitboard.ClearFile(File.A);
-
+            return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~side;
         }
+
+        public ulong ValidKnightMoves(ulong knight, ulong side)
+        {
+            ulong spot1Clip = Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B);
+	        ulong spot2Clip = Bitboard.ClearFile(File.A);
+	        ulong spot3Clip = Bitboard.ClearFile(File.H);
+	        ulong spot4Clip = Bitboard.ClearFile(File.H) & Bitboard.ClearFile(File.G);
+	        ulong spot5Clip = Bitboard.ClearFile(File.H) & Bitboard.ClearFile(File.G);
+	        ulong spot6Clip = Bitboard.ClearFile(File.H);
+	        ulong spot7Clip = Bitboard.ClearFile(File.A);
+	        ulong spot8Clip = Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B);
+            return ((knight & spot1Clip) << 6 | (knight & spot2Clip) << 15 | (knight & spot3Clip) << 17 | (knight & spot4Clip) << 10 | 
+            (knight & spot5Clip) >> 6 | (knight & spot6Clip) >> 15 | (knight & spot7Clip) >> 17 | (knight & spot8Clip) >> 10) & ~side;
+        }
+        
         /*public void UnsafeMove(Move move) //does not check if move is legal
         {
             if (Turn) //white move
