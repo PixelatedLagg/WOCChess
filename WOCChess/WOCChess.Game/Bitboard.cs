@@ -35,10 +35,15 @@ namespace WOCChess.Game
             return Convert.ToUInt64($"{rank}{rank}{rank}{rank}{rank}{rank}{rank}{rank}", 2);
         }
 
-        public static ulong GetPosition(string position)
+        public static ulong GetBoard(string position)
         {
             ulong empty = 0B_0000000000000000000000000000000000000000000000000000000000000000UL;
             return empty |= 1UL << position[0] - 'A' + (position[1] - '1') * 8;
         }
+
+        /*public static string[] GetCoords(ulong board)
+        {
+
+        }*/
     }
 }

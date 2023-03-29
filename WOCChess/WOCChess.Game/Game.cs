@@ -50,6 +50,11 @@ namespace WOCChess.Game
             return ((knight & spot1Clip) << 6 | (knight & spot2Clip) << 15 | (knight & spot3Clip) << 17 | (knight & spot4Clip) << 10 | 
             (knight & spot5Clip) >> 6 | (knight & spot6Clip) >> 15 | (knight & spot7Clip) >> 17 | (knight & spot8Clip) >> 10) & ~side;
         }
+
+        public ulong ValidWhitePawnMoves()
+        {
+            
+        }
         
         /*public void UnsafeMove(Move move) //does not check if move is legal
         {
