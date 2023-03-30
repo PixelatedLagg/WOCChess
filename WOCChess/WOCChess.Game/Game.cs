@@ -51,9 +51,10 @@ namespace WOCChess.Game
             (knight & spot5Clip) >> 6 | (knight & spot6Clip) >> 15 | (knight & spot7Clip) >> 17 | (knight & spot8Clip) >> 10) & ~side;
         }
 
-        public ulong ValidWhitePawnMoves()
+        public ulong ValidWhitePawnMoves(ulong pawn)
         {
-            
+            return (((pawn << 8) & ~AllPieces) | (((((pawn << 8) & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces)) | 
+            ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
         }
         
         /*public void UnsafeMove(Move move) //does not check if move is legal
