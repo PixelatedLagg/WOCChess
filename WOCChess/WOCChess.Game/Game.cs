@@ -30,6 +30,9 @@ namespace WOCChess.Game
             WhiteToMove?.Invoke();
         }
 
+        /// <summary>Get all valid moves for a king.</summary>
+        /// <param name="king">The king.</param>
+        /// <param name="side">All of the pieces on the king's side.</param>
         public ulong ValidKingMoves(ulong king, ulong side)
         {
             ulong kingClipFileH = king & Bitboard.ClearFile(File.H);
@@ -37,6 +40,9 @@ namespace WOCChess.Game
             return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~side;
         }
 
+        /// <summary>Get all valid moves for a knight.</summary>
+        /// <param name="knight">The knight.</param>
+        /// <param name="side">All of the pieces on the knight's side.</param>
         public ulong ValidKnightMoves(ulong knight, ulong side)
         {
             ulong spot1Clip = Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B);
@@ -51,10 +57,20 @@ namespace WOCChess.Game
             (knight & spot5Clip) >> 6 | (knight & spot6Clip) >> 15 | (knight & spot7Clip) >> 17 | (knight & spot8Clip) >> 10) & ~side;
         }
 
+        /// <summary>Get all valid moves for a white pawn.</summary>
+        /// <param name="pawn">The white pawn.</param>
         public ulong ValidWhitePawnMoves(ulong pawn)
         {
             return (((pawn << 8) & ~AllPieces) | (((((pawn << 8) & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces)) | 
             ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
+        }
+
+        /// <summary>Get all valid moves for a black pawn.</summary>
+        /// <param name="pawn">The black pawn.</param>
+        public ulong ValidBlackPawnMoves(ulong pawn)
+        {
+            return (((pawn >> 8) & ~AllPieces) | (((((pawn >> 8) & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces)) | 
+            ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
         }
         
         /*public void UnsafeMove(Move move) //does not check if move is legal

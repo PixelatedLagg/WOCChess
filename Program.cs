@@ -7,6 +7,7 @@ public class Program
         //Game game = new Game();
         //game.Start();
         //game.UnsafeMove(new Move(11, 27, Piece.Pawn));
-        Bitboard.Debug(Bitboard.GetPosition("A8"));
+        Game game = new Game();
+        Bitboard.Debug(game.ValidWhitePawnMoves(Bitboard.GetBoard("A7")));
     }
 }
