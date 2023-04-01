@@ -61,8 +61,14 @@ namespace WOCChess.Game
         /// <param name="pawn">The white pawn.</param>
         public ulong ValidWhitePawnMoves(ulong pawn)
         {
-            return (((pawn << 8) & ~AllPieces) | (((((pawn << 8) & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces)) | 
-            ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
+            ulong white_pawn_one_step = (pawn << 8) & ~AllPieces; 
+            ulong white_pawn_two_steps = ((white_pawn_one_step & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces; 
+            ulong white_pawn_valid_moves = white_pawn_one_step | white_pawn_two_steps;
+            ulong white_pawn_left_attack = (pawn & Bitboard.ClearFile(File.A)) << 7;
+            ulong white_pawn_right_attack = (pawn & Bitboard.ClearFile(File.H)) << 9;
+            ulong white_pawn_attacks = white_pawn_left_attack | white_pawn_right_attack;
+            ulong white_pawn_valid_attacks = white_pawn_attacks & AllBlackPieces;
+            return white_pawn_valid_moves | white_pawn_valid_attacks;
         }
 
         /// <summary>Get all valid moves for a black pawn.</summary>
