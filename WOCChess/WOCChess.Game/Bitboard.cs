@@ -11,6 +11,7 @@ namespace WOCChess.Game
             {
                 Console.WriteLine($"{rank[7]}  {rank[6]}  {rank[5]}  {rank[4]}  {rank[3]}  {rank[2]}  {rank[1]}  {rank[0]}");
             }
+            Console.WriteLine($"{String.Concat(Enumerable.Repeat('0', BitOperations.LeadingZeroCount(board)))}{Convert.ToString((long)board, 2)}");
         }
         
         public static ulong ClearRank(Rank rank)
@@ -25,13 +26,13 @@ namespace WOCChess.Game
 
         public static ulong ClearFile(File file)
         {
-            string rank = $"{String.Concat(Enumerable.Repeat("1", (int)file))}0{String.Concat(Enumerable.Repeat("1", 7 - (int)file))}";
+            string rank = $"{String.Concat(Enumerable.Repeat("1", 7 - (int)file))}0{String.Concat(Enumerable.Repeat("1", (int)file))}";
             return Convert.ToUInt64($"{rank}{rank}{rank}{rank}{rank}{rank}{rank}{rank}", 2);
         }
 
         public static ulong MaskFile(File file)
         {
-            string rank = $"{String.Concat(Enumerable.Repeat("0", (int)file))}1{String.Concat(Enumerable.Repeat("0", 7 - (int)file))}";
+            string rank = $"{String.Concat(Enumerable.Repeat("0", 7 - (int)file))}1{String.Concat(Enumerable.Repeat("0", (int)file))}";
             return Convert.ToUInt64($"{rank}{rank}{rank}{rank}{rank}{rank}{rank}{rank}", 2);
         }
 

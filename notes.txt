@@ -4,8 +4,6 @@ todo:
 -add castling short and long
 
 
--fix pawn movement bugs
-
 
 BitBoards[piece] &= ~(1U << from); //reset bit at previous position
 BitBoards[piece] |= 1U << to; //set bit at current position
