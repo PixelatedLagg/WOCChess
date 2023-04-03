@@ -7,12 +7,14 @@ namespace WOCChess.Game
         Bishop,
         Rook,
         Queen,
-        King,
-        LongCastle,
-        ShortCastle,
-        PromotionQueen,
-        PromotionRook,
-        PromotionBishop,
-        PromotionKnight
+        King
+    }
+
+    public enum PromotionPiece
+    {
+        Knight,
+        Bishop,
+        Rook,
+        Queen
     }
 }

@@ -78,6 +78,45 @@ namespace WOCChess.Game
             return (((pawn >> 8) & ~AllPieces) | (((((pawn >> 8) & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces)) | 
             ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
         }
+
+        public void UnsafePromoteWhite(ulong pawn, PromotionPiece promotionPiece)
+        {
+            WhitePawns ^= pawn;
+            switch (promotionPiece)
+            {
+                case PromotionPiece.Knight:
+                    WhiteKnights |= pawn;
+                    break;
+                case PromotionPiece.Bishop:
+                    WhiteBishops |= pawn;
+                    break;
+                case PromotionPiece.Rook:
+                    WhiteRooks |= pawn;
+                    break;
+                case PromotionPiece.Queen:
+                    WhiteQueens |= pawn;
+                    break;
+            }
+        }
+        public void UnsafePromoteBlack(ulong pawn, PromotionPiece promotionPiece)
+        {
+            BlackPawns ^= pawn;
+            switch (promotionPiece)
+            {
+                case PromotionPiece.Knight:
+                    BlackKnights |= pawn;
+                    break;
+                case PromotionPiece.Bishop:
+                    BlackBishops |= pawn;
+                    break;
+                case PromotionPiece.Rook:
+                    BlackRooks |= pawn;
+                    break;
+                case PromotionPiece.Queen:
+                    BlackQueens |= pawn;
+                    break;
+            }
+        }
         
         /*public void UnsafeMove(Move move) //does not check if move is legal
         {
