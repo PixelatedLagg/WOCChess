@@ -98,6 +98,7 @@ namespace WOCChess.Game
                     break;
             }
         }
+
         public void UnsafePromoteBlack(ulong pawn, PromotionPiece promotionPiece)
         {
             BlackPawns ^= pawn;
@@ -114,6 +115,30 @@ namespace WOCChess.Game
                     break;
                 case PromotionPiece.Queen:
                     BlackQueens |= pawn;
+                    break;
+            }
+        }
+
+        public void PromoteWhite(ulong pawn, PromotionPiece promotionPiece)
+        {
+            if (WhitePawns != (WhitePawns & pawn) || pawn == (pawn & Bitboard.MaskRank(Rank.R7)))
+            {
+                return;
+            }
+            WhitePawns ^= pawn;
+            switch (promotionPiece)
+            {
+                case PromotionPiece.Knight:
+                    WhiteKnights |= pawn;
+                    break;
+                case PromotionPiece.Bishop:
+                    WhiteBishops |= pawn;
+                    break;
+                case PromotionPiece.Rook:
+                    WhiteRooks |= pawn;
+                    break;
+                case PromotionPiece.Queen:
+                    WhiteQueens |= pawn;
                     break;
             }
         }
