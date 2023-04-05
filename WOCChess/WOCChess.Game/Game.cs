@@ -142,6 +142,30 @@ namespace WOCChess.Game
                     break;
             }
         }
+
+        public void PromoteBlack(ulong pawn, PromotionPiece promotionPiece)
+        {
+            if (BlackPawns != (BlackPawns & pawn) || pawn == (pawn & Bitboard.MaskRank(Rank.R1)))
+            {
+                return;
+            }
+            BlackPawns ^= pawn;
+            switch (promotionPiece)
+            {
+                case PromotionPiece.Knight:
+                    BlackKnights |= pawn;
+                    break;
+                case PromotionPiece.Bishop:
+                    BlackBishops |= pawn;
+                    break;
+                case PromotionPiece.Rook:
+                    BlackRooks |= pawn;
+                    break;
+                case PromotionPiece.Queen:
+                    BlackQueens |= pawn;
+                    break;
+            }
+        }
         
         /*public void UnsafeMove(Move move) //does not check if move is legal
         {
