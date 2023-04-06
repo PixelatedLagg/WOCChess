@@ -21,6 +21,11 @@ namespace WOCChess.Game
         public ulong BlackQueens = 0b_00001000_00000000_000000000000000000000000000000000000000000000000UL;
         public ulong BlackKing = 0b_00010000_00000000_000000000000000000000000000000000000000000000000UL;
 
+        public bool WhiteLongCastle = false;
+        public bool WhiteShortCastle = false;
+        public bool BlackLongCastle = false;
+        public bool BlackShortCastle = false;
+
         public ulong AllWhitePieces => WhitePawns | WhiteRooks | WhiteKnights | WhiteBishops | WhiteQueens | WhiteKing;
         public ulong AllBlackPieces => BlackPawns | BlackRooks | BlackKnights | BlackBishops | BlackQueens | BlackKing;
         public ulong AllPieces => AllWhitePieces | AllBlackPieces;
@@ -61,14 +66,7 @@ namespace WOCChess.Game
         /// <param name="pawn">The white pawn.</param>
         public ulong ValidWhitePawnMoves(ulong pawn)
         {
-            ulong white_pawn_one_step = (pawn << 8) & ~AllPieces; 
-            ulong white_pawn_two_steps = ((white_pawn_one_step & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces; 
-            ulong white_pawn_valid_moves = white_pawn_one_step | white_pawn_two_steps;
-            ulong white_pawn_left_attack = (pawn & Bitboard.ClearFile(File.A)) << 7;
-            ulong white_pawn_right_attack = (pawn & Bitboard.ClearFile(File.H)) << 9;
-            ulong white_pawn_attacks = white_pawn_left_attack | white_pawn_right_attack;
-            ulong white_pawn_valid_attacks = white_pawn_attacks & AllBlackPieces;
-            return white_pawn_valid_moves | white_pawn_valid_attacks;
+            return (((pawn << 8) & ~AllPieces) | ((((pawn << 8) & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces) | ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
         }
 
         /// <summary>Get all valid moves for a black pawn.</summary>
@@ -166,48 +164,6 @@ namespace WOCChess.Game
                     break;
             }
         }
-        
-        /*public void UnsafeMove(Move move) //does not check if move is legal
-        {
-            if (Turn) //white move
-            {
-                Console.WriteLine("a");
-                switch (move.PieceMoved)
-                {
-                    case Piece.Pawn:
-                        Console.WriteLine("b");
-                        WhitePawns &= ~(1U << move.From);
-                        WhitePawns |= 1U << move.To;
-                        break;
-                    case Piece.Knight:
-                        WhiteKnights &= ~(1U << move.From);
-                        WhiteKnights |= 1U << move.To;
-                        break;
-                    case Piece.Bishop:
-                        WhiteBishops &= ~(1U << move.From);
-                        WhiteBishops |= 1U << move.To;
-                        break;
-                    case Piece.Rook:
-                        WhiteRooks &= ~(1U << move.From);
-                        WhiteRooks |= 1U << move.To;
-                        break;
-                    case Piece.Queen:
-                        WhiteQueens &= ~(1U << move.From);
-                        WhiteQueens |= 1U << move.To;
-                        break;
-                    case Piece.King:
-                        WhiteKing &= ~(1U << move.From);
-                        WhiteKing |= 1U << move.To;
-                        break;
-                }
-                BlackToMove?.Invoke();
-            }
-            else //black move
-            {
-                WhiteToMove?.Invoke();
-            }
-            Moves.Add(move);
-        }*/
     }
 }
 
