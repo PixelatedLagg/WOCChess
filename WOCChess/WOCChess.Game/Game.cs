@@ -77,6 +77,9 @@ namespace WOCChess.Game
             ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
         }
 
+        /// <summary>Promote a white pawn without any checks.</summary>
+        /// <param name="pawn">The white pawn to promote.</param>
+        /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void UnsafePromoteWhite(ulong pawn, PromotionPiece promotionPiece)
         {
             WhitePawns ^= pawn;
@@ -97,6 +100,9 @@ namespace WOCChess.Game
             }
         }
 
+        /// <summary>Promote a black pawn without any checks.</summary>
+        /// <param name="pawn">The black pawn to promote.</param>
+        /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void UnsafePromoteBlack(ulong pawn, PromotionPiece promotionPiece)
         {
             BlackPawns ^= pawn;
@@ -117,6 +123,9 @@ namespace WOCChess.Game
             }
         }
 
+        /// <summary>Promote a white pawn.</summary>
+        /// <param name="pawn">The white pawn to promote.</param>
+        /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void PromoteWhite(ulong pawn, PromotionPiece promotionPiece)
         {
             if (WhitePawns != (WhitePawns & pawn) || pawn == (pawn & Bitboard.MaskRank(Rank.R7)))
@@ -141,6 +150,9 @@ namespace WOCChess.Game
             }
         }
 
+        /// <summary>Promote a black pawn.</summary>
+        /// <param name="pawn">The black pawn to promote.</param>
+        /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void PromoteBlack(ulong pawn, PromotionPiece promotionPiece)
         {
             if (BlackPawns != (BlackPawns & pawn) || pawn == (pawn & Bitboard.MaskRank(Rank.R1)))
