@@ -45,6 +45,12 @@ namespace WOCChess.Game
             return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~side;
         }
 
+        public void UnsafeWhiteKingMove(ulong king)
+        {
+            WhiteKing = king;
+            BlackToMove?.Invoke();
+        }
+
         /// <summary>Get all valid moves for a knight.</summary>
         /// <param name="knight">The knight.</param>
         /// <param name="side">All of the pieces on the knight's side.</param>
@@ -98,6 +104,7 @@ namespace WOCChess.Game
                     WhiteQueens |= pawn;
                     break;
             }
+            BlackToMove?.Invoke();
         }
 
         /// <summary>Promote a black pawn without any checks.</summary>
@@ -121,6 +128,7 @@ namespace WOCChess.Game
                     BlackQueens |= pawn;
                     break;
             }
+            WhiteToMove?.Invoke();
         }
 
         /// <summary>Promote a white pawn.</summary>
@@ -148,6 +156,7 @@ namespace WOCChess.Game
                     WhiteQueens |= pawn;
                     break;
             }
+            BlackToMove?.Invoke();
         }
 
         /// <summary>Promote a black pawn.</summary>
@@ -175,6 +184,7 @@ namespace WOCChess.Game
                     BlackQueens |= pawn;
                     break;
             }
+            WhiteToMove?.Invoke();
         }
     }
 }
