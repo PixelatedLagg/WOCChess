@@ -45,10 +45,20 @@ namespace WOCChess.Game
             return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~side;
         }
 
+        /// <summary>Move the white king without any verification.</summary>
+        /// <param name="pawn">The white king to move.</param>
         public void UnsafeWhiteKingMove(ulong king)
         {
             WhiteKing = king;
             BlackToMove?.Invoke();
+        }
+
+        /// <summary>Move the black king without any verification.</summary>
+        /// <param name="pawn">The black king to move.</param>
+        public void UnsafeBlackKingMove(ulong king)
+        {
+            BlackKing = king;
+            WhiteToMove?.Invoke();
         }
 
         /// <summary>Get all valid moves for a knight.</summary>
@@ -83,7 +93,7 @@ namespace WOCChess.Game
             ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
         }
 
-        /// <summary>Promote a white pawn without any checks.</summary>
+        /// <summary>Promote a white pawn without any verification.</summary>
         /// <param name="pawn">The white pawn to promote.</param>
         /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void UnsafePromoteWhite(ulong pawn, PromotionPiece promotionPiece)
@@ -107,7 +117,7 @@ namespace WOCChess.Game
             BlackToMove?.Invoke();
         }
 
-        /// <summary>Promote a black pawn without any checks.</summary>
+        /// <summary>Promote a black pawn without any verification.</summary>
         /// <param name="pawn">The black pawn to promote.</param>
         /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void UnsafePromoteBlack(ulong pawn, PromotionPiece promotionPiece)
