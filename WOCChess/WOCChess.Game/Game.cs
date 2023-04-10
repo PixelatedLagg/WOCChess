@@ -61,6 +61,18 @@ namespace WOCChess.Game
             WhiteToMove?.Invoke();
         }
 
+        public ulong AllWhiteAttacked()
+        {
+            //shift pawns top left and top right to get pawns attacked
+        }
+        private IEnumerable<int> IterateBits(ulong board)
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                
+            }
+        }
+
         /// <summary>Get all valid moves for a knight.</summary>
         /// <param name="knight">The knight.</param>
         /// <param name="side">All of the pieces on the knight's side.</param>
