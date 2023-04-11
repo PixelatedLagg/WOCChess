@@ -8,6 +8,7 @@ public class Program
         //game.Start();
         //game.UnsafeMove(new Move(11, 27, Piece.Pawn));
         Game game = new Game();
-        Bitboard.Debug(game.ValidWhitePawnMoves(Bitboard.GetBoard("A6")));
+        Bitboard.Debug(game.WhitePawnAttacks(0B_000000000000000000000000000000000000000000000000_11111101_00000000UL));
+        Bitboard.Debug(0B_000000000000000000000000000000000000000000000000_11111101_00000000UL);
     }
 }

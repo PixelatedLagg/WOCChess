@@ -29,6 +29,7 @@ namespace WOCChess.Game
         public ulong AllWhitePieces => WhitePawns | WhiteRooks | WhiteKnights | WhiteBishops | WhiteQueens | WhiteKing;
         public ulong AllBlackPieces => BlackPawns | BlackRooks | BlackKnights | BlackBishops | BlackQueens | BlackKing;
         public ulong AllPieces => AllWhitePieces | AllBlackPieces;
+        public ulong WhiteAttacks => ValidKnightMoves(WhiteKnights, AllWhitePieces) | WhitePawnAttacks() | ValidKingMoves(WhiteKing, AllWhitePieces); //need to add queen + rook + bishop
 
         public void Start()
         {
@@ -43,6 +44,11 @@ namespace WOCChess.Game
             ulong kingClipFileH = king & Bitboard.ClearFile(File.H);
             ulong kingClipFileA = king & Bitboard.ClearFile(File.A);
             return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~side;
+        }
+
+        public ulong ValidQueenMoves(ulong queen, ulong side)
+        {
+            
         }
 
         /// <summary>Move the white king without any verification.</summary>
@@ -61,16 +67,9 @@ namespace WOCChess.Game
             WhiteToMove?.Invoke();
         }
 
-        public ulong AllWhiteAttacked()
+        public ulong WhitePawnAttacks()
         {
-            //shift pawns top left and top right to get pawns attacked
-        }
-        private IEnumerable<int> IterateBits(ulong board)
-        {
-            for (int i = 0; i < 64; i++)
-            {
-                
-            }
+            return ((WhitePawns & Bitboard.ClearFile(File.A)) << 7) | ((WhitePawns & Bitboard.ClearFile(File.H)) << 9);
         }
 
         /// <summary>Get all valid moves for a knight.</summary>
