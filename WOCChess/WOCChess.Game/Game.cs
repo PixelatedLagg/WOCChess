@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace WOCChess.Game
 {
     public class Game
@@ -44,6 +46,17 @@ namespace WOCChess.Game
             ulong kingClipFileH = king & Bitboard.ClearFile(File.H);
             ulong kingClipFileA = king & Bitboard.ClearFile(File.A);
             return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~side;
+        }
+
+        public ulong ValidRookMoves(ulong rook, ulong side)
+        {
+            //store ulong of current rook move test case
+            //start from up-down
+            //on down, clear rank 1
+            //on up, clear rank 8
+            //do same for sides
+            //in all directions, make checks for friendly + enemy pieces
+            //to end directional movement, check if all bits have been cleared (setting ulong equal to zero) from test ulong (meaning all possibilties have been tried)
         }
 
         public ulong ValidQueenMoves(ulong queen, ulong side)
