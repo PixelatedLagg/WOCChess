@@ -41,10 +41,5 @@ namespace WOCChess.Game
             ulong empty = 0B_0000000000000000000000000000000000000000000000000000000000000000UL;
             return empty |= 1UL << position[0] - 'A' + (position[1] - '1') * 8;
         }
-
-        /*public static string[] GetCoords(ulong board)
-        {
-
-        }*/
     }
 }

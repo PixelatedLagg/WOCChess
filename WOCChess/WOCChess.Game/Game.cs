@@ -6,6 +6,7 @@ namespace WOCChess.Game
     {
         public Action? WhiteToMove;
         public Action? BlackToMove;
+        public Action<string>? Error;
         public Action<int>? GameEnd; //0 is white win, 1 is black win, 2 is draw
         public List<Move> Moves = new List<Move>();
         public bool Turn => Moves.Count % 2 == 0; //true is white, false is black
@@ -31,7 +32,8 @@ namespace WOCChess.Game
         public ulong AllWhitePieces => WhitePawns | WhiteRooks | WhiteKnights | WhiteBishops | WhiteQueens | WhiteKing;
         public ulong AllBlackPieces => BlackPawns | BlackRooks | BlackKnights | BlackBishops | BlackQueens | BlackKing;
         public ulong AllPieces => AllWhitePieces | AllBlackPieces;
-        public ulong WhiteAttacks => ValidKnightMoves(WhiteKnights, AllWhitePieces) | WhitePawnAttacks() | ValidKingMoves(WhiteKing, AllWhitePieces); //need to add queen + rook + bishop
+        public ulong WhiteAttacks => ValidKnightMoves(WhiteKnights, AllWhitePieces) | WhitePawnAttacks() | ValidKingMoves(WhiteKing, AllWhitePieces) 
+        | ValidQueenMoves(WhiteQueens, AllWhitePieces, AllBlackPieces) | ValidRookMoves(WhiteRooks, AllWhitePieces, AllBlackPieces) | ValidBishopMoves(WhiteBishops, AllWhitePieces, AllBlackPieces);
 
         public void Start()
         {
@@ -48,25 +50,150 @@ namespace WOCChess.Game
             return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~side;
         }
 
-        public ulong ValidRookMoves(ulong rook, ulong side)
+        public ulong ValidRookMoves(ulong rook, ulong friendly, ulong enemy)
         {
+            ulong validMoves = 0;
+            ulong temp = rook; //for down
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearRank(Rank.R1);
+                if ((temp >> 8 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                temp >>= 8;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = rook; //for up
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearRank(Rank.R8);
+                if ((temp << 8 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                temp <<= 8;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = rook; //for left
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A);
+                if ((temp >> 1 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                temp >>= 1;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = rook; //for right
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.H);
+                if ((temp << 1 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                temp <<= 1;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+
             //store ulong of current rook move test case
             //start from up-down
             //on down, clear rank 1
             //on up, clear rank 8
             //do same for sides
             //in all directions, make checks for friendly + enemy pieces
-            //to end directional movement, check if all bits have been cleared (setting ulong equal to zero) from test ulong (meaning all possibilties have been tried)
+            //to end directional movement, check if all bits have been cleared (setting ulong equal to zero) from test ulong (meaning all possibilities have been tried)
+            return validMoves;
         }
 
-        public ulong ValidQueenMoves(ulong queen, ulong side)
+        public ulong ValidBishopMoves(ulong bishop, ulong friendly, ulong enemy)
         {
-            
+            ulong validMoves = 0;
+            ulong temp = bishop; //for top left
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R8);
+                if ((temp << 7 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                temp <<= 7;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = bishop; //for bottom left
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                if ((temp >> 9 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                temp >>= 9;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = bishop; //for top right
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                if ((temp << 9 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                temp <<= 9;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = bishop; //for bottom right
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                if ((temp >> 7 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                temp >>= 7;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            return validMoves;
         }
+        public ulong ValidQueenMoves(ulong queen, ulong friendly, ulong enemy) => ValidBishopMoves(queen, friendly, enemy) | ValidRookMoves(queen, friendly, enemy);
 
         /// <summary>Move the white king without any verification.</summary>
         /// <param name="pawn">The white king to move.</param>
-        public void UnsafeWhiteKingMove(ulong king)
+        public void MoveWhiteKingUnsafe(ulong king)
         {
             WhiteKing = king;
             BlackToMove?.Invoke();
@@ -74,44 +201,38 @@ namespace WOCChess.Game
 
         /// <summary>Move the black king without any verification.</summary>
         /// <param name="pawn">The black king to move.</param>
-        public void UnsafeBlackKingMove(ulong king)
+        public void MoveBlackKingUnsafe(ulong king)
         {
             BlackKing = king;
             WhiteToMove?.Invoke();
         }
 
-        public ulong WhitePawnAttacks()
+        public ulong GetWhitePawnAttacks()
         {
             return ((WhitePawns & Bitboard.ClearFile(File.A)) << 7) | ((WhitePawns & Bitboard.ClearFile(File.H)) << 9);
         }
 
         /// <summary>Get all valid moves for a knight.</summary>
-        /// <param name="knight">The knight.</param>
-        /// <param name="side">All of the pieces on the knight's side.</param>
-        public ulong ValidKnightMoves(ulong knight, ulong side)
+        /// <param name="knight">The knight to get all valid moves for.</param>
+        /// <param name="friendly">All pieces friendly to the knight.</param>
+        public ulong GetKnightMoves(ulong knight, ulong friendly)
         {
-            ulong spot1Clip = Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B);
-	        ulong spot2Clip = Bitboard.ClearFile(File.A);
-	        ulong spot3Clip = Bitboard.ClearFile(File.H);
-	        ulong spot4Clip = Bitboard.ClearFile(File.H) & Bitboard.ClearFile(File.G);
-	        ulong spot5Clip = Bitboard.ClearFile(File.H) & Bitboard.ClearFile(File.G);
-	        ulong spot6Clip = Bitboard.ClearFile(File.H);
-	        ulong spot7Clip = Bitboard.ClearFile(File.A);
-	        ulong spot8Clip = Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B);
-            return ((knight & spot1Clip) << 6 | (knight & spot2Clip) << 15 | (knight & spot3Clip) << 17 | (knight & spot4Clip) << 10 | 
-            (knight & spot5Clip) >> 6 | (knight & spot6Clip) >> 15 | (knight & spot7Clip) >> 17 | (knight & spot8Clip) >> 10) & ~side;
+            return ((knight & Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B)) << 6 | (knight & Bitboard.ClearFile(File.A)) << 15 | (knight & Bitboard.ClearFile(File.H)) << 17 
+            | (knight & Bitboard.ClearFile(File.H) & Bitboard.ClearFile(File.G)) << 10 | (knight & Bitboard.ClearFile(File.H) & Bitboard.ClearFile(File.G)) >> 6 
+            | (knight & Bitboard.ClearFile(File.H)) >> 15 | (knight & Bitboard.ClearFile(File.A)) >> 17 | (knight & Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B)) >> 10) & ~friendly;
         }
 
         /// <summary>Get all valid moves for a white pawn.</summary>
-        /// <param name="pawn">The white pawn.</param>
-        public ulong ValidWhitePawnMoves(ulong pawn)
+        /// <param name="knight">The white pawn to get all valid moves for.</param>
+        /// <param name="friendly">All pieces friendly to the knight.</param>
+        public ulong GetWhitePawnMoves(ulong pawn)
         {
             return (((pawn << 8) & ~AllPieces) | ((((pawn << 8) & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces) | ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
         }
 
         /// <summary>Get all valid moves for a black pawn.</summary>
         /// <param name="pawn">The black pawn.</param>
-        public ulong ValidBlackPawnMoves(ulong pawn)
+        public ulong GetBlackPawnMoves(ulong pawn)
         {
             return (((pawn >> 8) & ~AllPieces) | (((((pawn >> 8) & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces)) | 
             ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
@@ -120,7 +241,7 @@ namespace WOCChess.Game
         /// <summary>Promote a white pawn without any verification.</summary>
         /// <param name="pawn">The white pawn to promote.</param>
         /// <param name="promotionPiece">The piece to get from promotion.</param>
-        public void UnsafePromoteWhite(ulong pawn, PromotionPiece promotionPiece)
+        public void PromoteWhiteUnsafe(ulong pawn, PromotionPiece promotionPiece)
         {
             WhitePawns ^= pawn;
             switch (promotionPiece)
