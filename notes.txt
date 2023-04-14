@@ -7,3 +7,8 @@ todo:
 
 BitBoards[piece] &= ~(1U << from); //reset bit at previous position
 BitBoards[piece] |= 1U << to; //set bit at current position
+
+verification includes:
+-is correct turn
+-piece exists
+-piece isnt moving into check (either by pin or king moving into check)
