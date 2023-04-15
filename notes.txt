@@ -8,6 +8,9 @@ todo:
 BitBoards[piece] &= ~(1U << from); //reset bit at previous position
 BitBoards[piece] |= 1U << to; //set bit at current position
 
+game.WhiteRooks |= temp >> 8; //add temp rook
+game.WhiteRooks ^= rook; //remove previous rook
+
 verification includes:
 -is correct turn
 -piece exists
