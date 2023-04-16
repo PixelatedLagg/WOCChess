@@ -78,6 +78,87 @@ namespace WOCChess.Game
             return whiteChecks;
         }
 
+        public ulong GetWhitePins()
+        {
+            ulong whiteChecks = 0;
+            for (int i = 0; i < 64; i++) //iterating over rooks
+            {
+                if ((WhiteRooks | 1UL << i) == WhiteRooks) //found a rook
+                {
+                    whiteChecks |= ValidMoves.RookChecks(1UL << i, AllPieces);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((WhiteQueens | 1UL << i) == WhiteQueens) //found a queen
+                {
+                    whiteChecks |= ValidMoves.QueenChecks(1UL << i, AllPieces);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((WhiteBishops | 1UL << i) == WhiteBishops) //found a queen
+                {
+                    whiteChecks |= ValidMoves.BishopChecks(1UL << i, AllPieces);
+                }
+            }
+            return whiteChecks;
+        }
+
+        public ulong GetBlackChecks()
+        {
+            ulong blackChecks = ValidMoves.BlackPawnChecks(BlackPawns) | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingChecks(BlackKing);
+            for (int i = 0; i < 64; i++) //iterating over rooks
+            {
+                if ((BlackRooks | 1UL << i) == BlackRooks) //found a rook
+                {
+                    blackChecks |= ValidMoves.RookChecks(1UL << i, AllPieces);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((BlackQueens | 1UL << i) == BlackQueens) //found a queen
+                {
+                    blackChecks |= ValidMoves.QueenChecks(1UL << i, AllPieces);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((BlackBishops | 1UL << i) == BlackBishops) //found a queen
+                {
+                    blackChecks |= ValidMoves.BishopChecks(1UL << i, AllPieces);
+                }
+            }
+            return blackChecks;
+        }
+
+        public ulong GetBlackPins()
+        {
+            ulong blackChecks = 0;
+            for (int i = 0; i < 64; i++) //iterating over rooks
+            {
+                if ((BlackRooks | 1UL << i) == BlackRooks) //found a rook
+                {
+                    blackChecks |= ValidMoves.RookChecks(1UL << i, AllPieces);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((BlackQueens | 1UL << i) == BlackQueens) //found a queen
+                {
+                    blackChecks |= ValidMoves.QueenChecks(1UL << i, AllPieces);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((BlackBishops | 1UL << i) == BlackBishops) //found a queen
+                {
+                    blackChecks |= ValidMoves.BishopChecks(1UL << i, AllPieces);
+                }
+            }
+            return blackChecks;
+        }
+
         /// <summary>Get all valid moves for a black pawn.</summary>
         /// <param name="pawn">The black pawn.</param>
         public ulong GetBlackPawnMoves(ulong pawn)
