@@ -6,8 +6,7 @@ namespace WOCChess.Game
         public Action? BlackToMove;
         public Action<string>? Error;
         public Action<int>? GameEnd; //0 is white win, 1 is black win, 2 is draw
-        public List<Move> Moves = new List<Move>();
-        public bool Turn => Moves.Count % 2 == 0; //true is white, false is black
+        public bool Turn = true; //true is white, false is black
         public bool Check = false;
 
         public ulong WhitePawns = 0B_000000000000000000000000000000000000000000000000_11111111_00000000UL;
