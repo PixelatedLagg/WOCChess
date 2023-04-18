@@ -127,5 +127,55 @@ namespace WOCChess.Game
         {
             return ((pawn & Bitboard.ClearFile(File.A)) >> 7) | ((pawn & Bitboard.ClearFile(File.H)) >> 9);
         }
+
+        public static ulong RookMoves(ulong rook, ulong allPieces)
+        {
+            ulong validMoves = 0;
+            ulong temp = rook; //down
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearRank(Rank.R1);
+                if ((temp >> 8 & allPieces) != 0)
+                {
+                    break;
+                }
+                temp >>= 8;
+                validMoves |= temp;
+            }
+            temp = rook; //up
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearRank(Rank.R8);
+                if ((temp << 8 & allPieces) != 0)
+                {
+                    break;
+                }
+                temp <<= 8;
+                validMoves |= temp;
+            }
+            temp = rook; //left
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A);
+                if ((temp >> 1 & allPieces) != 0)
+                {
+                    break;
+                }
+                temp >>= 1;
+                validMoves |= temp;
+            }
+            temp = rook; //right
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.H);
+                if ((temp << 1 & allPieces) != 0)
+                {
+                    break;
+                }
+                temp <<= 1;
+                validMoves |= temp;
+            }
+            return validMoves;
+        }
     }
 }
