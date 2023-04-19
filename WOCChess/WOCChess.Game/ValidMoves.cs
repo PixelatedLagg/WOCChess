@@ -128,52 +128,68 @@ namespace WOCChess.Game
             return ((pawn & Bitboard.ClearFile(File.A)) >> 7) | ((pawn & Bitboard.ClearFile(File.H)) >> 9);
         }
 
-        public static ulong RookMoves(ulong rook, ulong allPieces)
+        public static ulong RookMoves(ulong rook, ulong friendly, ulong enemy) //need to add discovered check verification
         {
             ulong validMoves = 0;
-            ulong temp = rook; //down
+            ulong temp = rook; //for down
             while (temp != 0)
             {
                 temp &= Bitboard.ClearRank(Rank.R1);
-                if ((temp >> 8 & allPieces) != 0)
+                if ((temp >> 8 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
                 }
                 temp >>= 8;
                 validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
             }
-            temp = rook; //up
+            temp = rook; //for up
             while (temp != 0)
             {
                 temp &= Bitboard.ClearRank(Rank.R8);
-                if ((temp << 8 & allPieces) != 0)
+                if ((temp << 8 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
                 }
                 temp <<= 8;
                 validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
             }
-            temp = rook; //left
+            temp = rook; //for left
             while (temp != 0)
             {
                 temp &= Bitboard.ClearFile(File.A);
-                if ((temp >> 1 & allPieces) != 0)
+                if ((temp >> 1 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
                 }
                 temp >>= 1;
                 validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
             }
-            temp = rook; //right
+            temp = rook; //for right
             while (temp != 0)
             {
                 temp &= Bitboard.ClearFile(File.H);
-                if ((temp << 1 & allPieces) != 0)
+                if ((temp << 1 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
                 }
                 temp <<= 1;
                 validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
             }
             return validMoves;
         }
