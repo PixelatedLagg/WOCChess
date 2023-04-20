@@ -128,7 +128,7 @@ namespace WOCChess.Game
             return ((pawn & Bitboard.ClearFile(File.A)) >> 7) | ((pawn & Bitboard.ClearFile(File.H)) >> 9);
         }
 
-        public static ulong RookMoves(ulong rook, ulong friendly, ulong enemy) //need to add discovered check verification
+        public static ulong RookMovesWhite(ulong rook, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
         {
             ulong validMoves = 0;
             ulong temp = rook; //for down
@@ -139,6 +139,16 @@ namespace WOCChess.Game
                 {
                     break;
                 }
+                game.WhiteRooks |= temp >> 8; //add temp rook
+                game.WhiteRooks ^= rook; //remove previous rook
+                if ((game.WhiteKing & game.GetBlackPins()) != 0) //piece is pinned
+                {
+                    game.WhiteRooks ^= temp >> 8;
+                    game.WhiteRooks |= rook;
+                    break;
+                }
+                game.WhiteRooks ^= temp >> 8;
+                game.WhiteRooks |= rook;
                 temp >>= 8;
                 validMoves |= temp;
                 if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
@@ -154,6 +164,16 @@ namespace WOCChess.Game
                 {
                     break;
                 }
+                game.WhiteRooks |= temp << 8; //add temp rook
+                game.WhiteRooks ^= rook; //remove previous rook
+                if ((game.WhiteKing & game.GetBlackPins()) != 0) //piece is pinned
+                {
+                    game.WhiteRooks ^= temp << 8;
+                    game.WhiteRooks |= rook;
+                    break;
+                }
+                game.WhiteRooks ^= temp << 8;
+                game.WhiteRooks |= rook;
                 temp <<= 8;
                 validMoves |= temp;
                 if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
@@ -169,6 +189,16 @@ namespace WOCChess.Game
                 {
                     break;
                 }
+                game.WhiteRooks |= temp >> 1; //add temp rook
+                game.WhiteRooks ^= rook; //remove previous rook
+                if ((game.WhiteKing & game.GetBlackPins()) != 0) //piece is pinned
+                {
+                    game.WhiteRooks ^= temp >> 1;
+                    game.WhiteRooks |= rook;
+                    break;
+                }
+                game.WhiteRooks ^= temp >> 1;
+                game.WhiteRooks |= rook;
                 temp >>= 1;
                 validMoves |= temp;
                 if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
@@ -184,6 +214,16 @@ namespace WOCChess.Game
                 {
                     break;
                 }
+                game.WhiteRooks |= temp << 1; //add temp rook
+                game.WhiteRooks ^= rook; //remove previous rook
+                if ((game.WhiteKing & game.GetBlackPins()) != 0) //piece is pinned
+                {
+                    game.WhiteRooks ^= temp << 1;
+                    game.WhiteRooks |= rook;
+                    break;
+                }
+                game.WhiteRooks ^= temp << 1;
+                game.WhiteRooks |= rook;
                 temp <<= 1;
                 validMoves |= temp;
                 if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
