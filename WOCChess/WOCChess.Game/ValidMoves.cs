@@ -233,5 +233,113 @@ namespace WOCChess.Game
             }
             return validMoves;
         }
+
+        public static ulong BishopMovesWhite(ulong bishop, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
+        {
+            ulong validMoves = 0;
+            ulong temp = bishop; //for top left
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R8);
+                if ((temp << 7 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                game.WhiteRooks |= temp << 7; //add temp bishop
+                game.WhiteRooks ^= bishop; //remove previous bishop
+                if ((game.WhiteKing & game.GetBlackPins()) != 0) //piece is pinned
+                {
+                    game.WhiteRooks ^= temp << 7;
+                    game.WhiteRooks |= bishop;
+                    break;
+                }
+                game.WhiteRooks ^= temp << 7;
+                game.WhiteRooks |= bishop;
+                temp <<= 7;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = bishop; //for bottom left
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                if ((temp >> 9 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                game.WhiteRooks |= temp >> 9; //add temp bishop
+                game.WhiteRooks ^= bishop; //remove previous bishop
+                if ((game.WhiteKing & game.GetBlackPins()) != 0) //piece is pinned
+                {
+                    game.WhiteRooks ^= temp >> 9;
+                    game.WhiteRooks |= bishop;
+                    break;
+                }
+                game.WhiteRooks ^= temp >> 9;
+                game.WhiteRooks |= bishop;
+                temp >>= 9;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = bishop; //for top right
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                if ((temp << 9 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                game.WhiteRooks |= temp << 9; //add temp bishop
+                game.WhiteRooks ^= bishop; //remove previous bishop
+                if ((game.WhiteKing & game.GetBlackPins()) != 0) //piece is pinned
+                {
+                    game.WhiteRooks ^= temp << 9;
+                    game.WhiteRooks |= bishop;
+                    break;
+                }
+                game.WhiteRooks ^= temp << 9;
+                game.WhiteRooks |= bishop;
+                temp <<= 9;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = bishop; //for bottom right
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                if ((temp >> 7 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                game.WhiteRooks |= temp >> 7; //add temp bishop
+                game.WhiteRooks ^= bishop; //remove previous bishop
+                if ((game.WhiteKing & game.GetBlackPins()) != 0) //piece is pinned
+                {
+                    game.WhiteRooks ^= temp >> 7;
+                    game.WhiteRooks |= bishop;
+                    break;
+                }
+                game.WhiteRooks ^= temp >> 7;
+                game.WhiteRooks |= bishop;
+                temp >>= 7;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            return validMoves;
+        }
+
+        public static ulong QueenMovesWhite(ulong queen, ulong friendly, ulong enemy, Game game) => RookMovesWhite(queen, friendly, enemy, game) | BishopMovesWhite(queen, friendly, enemy, game);
     }
 }
