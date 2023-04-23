@@ -233,6 +233,111 @@ namespace WOCChess.Game
             }
             return validMoves;
         }
+        public static ulong RookMovesBlack(ulong rook, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
+        {
+            ulong validMoves = 0;
+            ulong temp = rook; //for down
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearRank(Rank.R1);
+                if ((temp >> 8 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                game.BlackRooks |= temp >> 8; //add temp rook
+                game.BlackRooks ^= rook; //remove previous rook
+                if ((game.BlackKing & game.GetWhitePins()) != 0) //piece is pinned
+                {
+                    game.BlackRooks ^= temp >> 8;
+                    game.BlackRooks |= rook;
+                    break;
+                }
+                game.BlackRooks ^= temp >> 8;
+                game.BlackRooks |= rook;
+                temp >>= 8;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = rook; //for up
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearRank(Rank.R8);
+                if ((temp << 8 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                game.BlackRooks |= temp << 8; //add temp rook
+                game.BlackRooks ^= rook; //remove previous rook
+                if ((game.BlackKing & game.GetWhitePins()) != 0) //piece is pinned
+                {
+                    game.BlackRooks ^= temp << 8;
+                    game.BlackRooks |= rook;
+                    break;
+                }
+                game.BlackRooks ^= temp << 8;
+                game.BlackRooks |= rook;
+                temp <<= 8;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = rook; //for left
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.A);
+                if ((temp >> 1 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                game.BlackRooks |= temp >> 1; //add temp rook
+                game.BlackRooks ^= rook; //remove previous rook
+                if ((game.BlackKing & game.GetWhitePins()) != 0) //piece is pinned
+                {
+                    game.BlackRooks ^= temp >> 1;
+                    game.BlackRooks |= rook;
+                    break;
+                }
+                game.BlackRooks ^= temp >> 1;
+                game.BlackRooks |= rook;
+                temp >>= 1;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            temp = rook; //for right
+            while (temp != 0)
+            {
+                temp &= Bitboard.ClearFile(File.H);
+                if ((temp << 1 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
+                {
+                    break;
+                }
+                game.BlackRooks |= temp << 1; //add temp rook
+                game.BlackRooks ^= rook; //remove previous rook
+                if ((game.BlackKing & game.GetWhitePins()) != 0) //piece is pinned
+                {
+                    game.BlackRooks ^= temp << 1;
+                    game.BlackRooks |= rook;
+                    break;
+                }
+                game.BlackRooks ^= temp << 1;
+                game.BlackRooks |= rook;
+                temp <<= 1;
+                validMoves |= temp;
+                if ((temp & enemy) != 0) //if overlap with enemy pieces, allow to save move as attack, but stop after
+                {
+                    break;
+                }
+            }
+            return validMoves;
+        }
 
         public static ulong BishopMovesWhite(ulong bishop, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
         {
