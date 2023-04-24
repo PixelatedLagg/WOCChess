@@ -552,5 +552,6 @@ namespace WOCChess.Game
         }
 
         public static ulong QueenMovesWhite(ulong queen, ulong friendly, ulong enemy, Game game) => RookMovesWhite(queen, friendly, enemy, game) | BishopMovesWhite(queen, friendly, enemy, game);
+        public static ulong QueenMovesBlack(ulong queen, ulong friendly, ulong enemy, Game game) => RookMovesBlack(queen, friendly, enemy, game) | BishopMovesBlack(queen, friendly, enemy, game);
     }
 }
