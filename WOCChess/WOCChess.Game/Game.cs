@@ -50,6 +50,33 @@ namespace WOCChess.Game
             ((((WhitePawns & Bitboard.ClearFile(File.A)) << 7) | ((WhitePawns & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
         }
 
+        public ulong GetWhiteMoves()
+        {
+            ulong whiteChecks = ValidMoves.WhitePawnChecks(WhitePawns) | ValidMoves.KnightChecks(WhiteKnights) | ValidMoves.KingChecks(WhiteKing);
+            for (int i = 0; i < 64; i++) //iterating over rooks
+            {
+                if ((WhiteRooks | 1UL << i) == WhiteRooks) //found a rook
+                {
+                    whiteChecks |= ValidMoves.RookChecks(1UL << i, AllPieces);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((WhiteQueens | 1UL << i) == WhiteQueens) //found a queen
+                {
+                    whiteChecks |= ValidMoves.QueenChecks(1UL << i, AllPieces);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((WhiteBishops | 1UL << i) == WhiteBishops) //found a queen
+                {
+                    whiteChecks |= ValidMoves.BishopChecks(1UL << i, AllPieces);
+                }
+            }
+            return whiteChecks;
+        }
+
         public ulong GetWhiteChecks()
         {
             ulong whiteChecks = ValidMoves.WhitePawnChecks(WhitePawns) | ValidMoves.KnightChecks(WhiteKnights) | ValidMoves.KingChecks(WhiteKing);

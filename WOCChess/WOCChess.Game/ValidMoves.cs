@@ -108,14 +108,21 @@ namespace WOCChess.Game
         {
             return ((knight & Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B)) << 6 | (knight & Bitboard.ClearFile(File.A)) << 15 | (knight & Bitboard.ClearFile(File.H)) << 17 
             | (knight & Bitboard.ClearFile(File.H) & Bitboard.ClearFile(File.G)) << 10 | (knight & Bitboard.ClearFile(File.H) & Bitboard.ClearFile(File.G)) >> 6 
-            | (knight & Bitboard.ClearFile(File.H)) >> 15 | (knight & Bitboard.ClearFile(File.A)) >> 17 | (knight & Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B)) >> 10); // & ~friendly
+            | (knight & Bitboard.ClearFile(File.H)) >> 15 | (knight & Bitboard.ClearFile(File.A)) >> 17 | (knight & Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B)) >> 10);
         }
 
         public static ulong KingChecks(ulong king)
         {
             ulong kingClipFileH = king & Bitboard.ClearFile(File.H);
             ulong kingClipFileA = king & Bitboard.ClearFile(File.A);
-            return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1); // & ~friendly
+            return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1);
+        }
+
+        public static ulong KingMoves(ulong king, ulong otherChecks)
+        {
+            ulong kingClipFileH = king & Bitboard.ClearFile(File.H);
+            ulong kingClipFileA = king & Bitboard.ClearFile(File.A);
+            return (kingClipFileH << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileA >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~otherChecks;
         }
 
         public static ulong WhitePawnChecks(ulong pawn)
