@@ -131,6 +131,33 @@ namespace WOCChess.Game
             return whiteChecks;
         }
 
+        public ulong GetBlackMoves()
+        {
+            ulong blackMoves = GetBlackPawnMoves() | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingChecks(BlackKing);
+            for (int i = 0; i < 64; i++) //iterating over rooks
+            {
+                if ((BlackRooks | 1UL << i) == BlackRooks) //found a rook
+                {
+                    blackMoves |= ValidMoves.RookMovesBlack(1UL << i, AllPieces, AllBlackPieces, this);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((BlackQueens | 1UL << i) == BlackQueens) //found a queen
+                {
+                    blackMoves |= ValidMoves.QueenMovesBlack(1UL << i, AllPieces, AllBlackPieces, this);
+                }
+            }
+            for (int i = 0; i < 64; i++) //iterating over queens
+            {
+                if ((BlackBishops | 1UL << i) == BlackBishops) //found a queen
+                {
+                    blackMoves |= ValidMoves.BishopMovesBlack(1UL << i, AllPieces, AllBlackPieces, this);
+                }
+            }
+            return blackMoves;
+        }
+
         public ulong GetBlackChecks()
         {
             ulong blackChecks = ValidMoves.BlackPawnChecks(BlackPawns) | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingChecks(BlackKing);
@@ -186,11 +213,10 @@ namespace WOCChess.Game
         }
 
         /// <summary>Get all valid moves for a black pawn.</summary>
-        /// <param name="pawn">The black pawn.</param>
-        public ulong GetBlackPawnMoves(ulong pawn)
+        public ulong GetBlackPawnMoves()
         {
-            return ((pawn >> 8 & ~AllPieces) | ((((pawn >> 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces)) | 
-            ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
+            return ((BlackPawns >> 8 & ~AllPieces) | ((((BlackPawns >> 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces)) | 
+            ((((BlackPawns & Bitboard.ClearFile(File.A)) >> 9) | ((BlackPawns & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
         }
 
         /*public bool MoveWhiteKing(ulong king)
