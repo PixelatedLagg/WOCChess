@@ -6,9 +6,10 @@ namespace WOCChess.Game
         {
             Game game = new Game();
             int pos = 56;
-            foreach (char c in fen)
+            int i = 0;
+            for (; i < fen.Length; i++)
             {
-                switch (c)
+                switch (fen[i])
                 {
                     case 'P':
                         game.WhitePawns |= 1U << pos;
@@ -49,12 +50,17 @@ namespace WOCChess.Game
                     case '/':
                         pos -= 15;
                         break;
+                    case ' ':
+                        goto turn;
                     default:
-                        pos += c - '0';
+                        pos += fen[i] - '0';
                         break;
                 }
                 pos++;
             }
+            turn:
+            i += 2;
+            game.Turn = fen[i] == 'w';
             return game;
         }
     }
