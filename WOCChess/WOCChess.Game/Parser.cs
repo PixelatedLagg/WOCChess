@@ -61,6 +61,22 @@ namespace WOCChess.Game
             turn:
             i += 2;
             game.Turn = fen[i] == 'w';
+            i += 2;
+            while (i != ' ')
+            {
+                switch (fen[i])
+                {
+                    case 'K':
+                        break;
+                    case 'Q':
+                        break;
+                    case 'k':
+                        break;
+                    case 'q':
+                        break;
+                }
+                i++;
+            }
             return game;
         }
     }
