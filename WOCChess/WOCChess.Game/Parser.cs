@@ -67,15 +67,31 @@ namespace WOCChess.Game
                 switch (fen[i])
                 {
                     case 'K':
+                        game.WhiteShortCastle = true;
                         break;
                     case 'Q':
+                        game.WhiteLongCastle = true;
                         break;
                     case 'k':
+                        game.BlackShortCastle = true;
                         break;
                     case 'q':
+                        game.BlackLongCastle = true;
                         break;
                 }
                 i++;
+            }
+            i++;
+            if (Char.IsLetter(fen[i]))
+            {
+                if (fen[i + 1] == '3') //white can be en passanted
+                {
+                    game.WhiteEPPawns = Bitboard.GetBoard($"{fen[i]}{fen[i + 1]}") >> 8;
+                }
+                else //black can be en passanted
+                {
+                    game.BlackEPPawns = Bitboard.GetBoard($"{fen[i]}{fen[i + 1]}") << 8;
+                }
             }
             return game;
         }
