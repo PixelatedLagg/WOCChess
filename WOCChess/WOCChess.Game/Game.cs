@@ -8,6 +8,7 @@ namespace WOCChess.Game
         public Action<int>? GameEnd; //0 is white win, 1 is black win, 2 is draw
         public bool Turn = true; //true is white, false is black
         public bool Check = false;
+        public int HalfMoves = 0;
 
         public ulong WhitePawns = 0B_000000000000000000000000000000000000000000000000_11111111_00000000UL;
         //public ulong WhiteRooks = 0B_000000000000000000000000000000000000000000000000_00000000_10000001UL;

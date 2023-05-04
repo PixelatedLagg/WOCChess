@@ -93,6 +93,14 @@ namespace WOCChess.Game
                     game.BlackEPPawns = Bitboard.GetBoard($"{fen[i]}{fen[i + 1]}") << 8;
                 }
             }
+            i += 3;
+            string halfMoves = "";
+            while (fen[i] != ' ')
+            {
+                halfMoves += $"{fen[i]}";
+                i++;
+            }
+            game.HalfMoves = Convert.ToInt32(halfMoves);
             return game;
         }
     }
