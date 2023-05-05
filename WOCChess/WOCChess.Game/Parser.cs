@@ -7,62 +7,60 @@ namespace WOCChess.Game
             Game game = new Game();
             int pos = 56;
             int i = 0;
-            for (; i < fen.Length; i++)
+            while (fen[i] != ' ')
             {
+                Console.WriteLine(pos);
                 switch (fen[i])
                 {
                     case 'P':
-                        game.WhitePawns |= 1U << pos;
+                        game.WhitePawns |= 1UL << pos;
                         break;
                     case 'R':
-                        game.WhiteRooks |= 1U << pos;
+                        game.WhiteRooks |= 1UL << pos;
                         break;
                     case 'N':
-                        game.WhiteKnights |= 1U << pos;
+                        game.WhiteKnights |= 1UL << pos;
                         break;
                     case 'B':
-                        game.WhiteBishops |= 1U << pos;
+                        game.WhiteBishops |= 1UL << pos;
                         break;
                     case 'Q':
-                        game.WhiteQueens |= 1U << pos;
+                        game.WhiteQueens |= 1UL << pos;
                         break;
                     case 'K':
-                        game.WhiteKing |= 1U << pos;
+                        game.WhiteKing |= 1UL << pos;
                         break;
                     case 'p':
-                        game.BlackPawns |= 1U << pos;
+                        game.BlackPawns |= 1UL << pos;
                         break;
                     case 'r':
-                        game.BlackRooks |= 1U << pos;
+                        game.BlackRooks |= 1UL << pos;
                         break;
                     case 'n':
-                        game.BlackKnights |= 1U << pos;
+                        game.BlackKnights |= 1UL << pos;
                         break;
                     case 'b':
-                        game.BlackBishops |= 1U << pos;
+                        game.BlackBishops |= 1UL << pos;
                         break;
                     case 'q':
-                        game.BlackQueens |= 1U << pos;
+                        game.BlackQueens |= 1UL << pos;
                         break;
                     case 'k':
-                        game.BlackKing |= 1U << pos;
+                        game.BlackKing |= 1UL << pos;
                         break;
                     case '/':
-                        pos -= 15;
+                        pos -= 17;
                         break;
-                    case ' ':
-                        goto turn;
                     default:
-                        pos += fen[i] - '0';
+                        pos += fen[i] - '1';
                         break;
                 }
                 pos++;
+                i++;
             }
-            turn:
-            i += 2;
-            game.Turn = fen[i] == 'w';
-            i += 2;
-            while (i != ' ')
+            game.Turn = fen[i + 1] == 'w';
+            i += 3;
+            while (fen[i] != ' ')
             {
                 switch (fen[i])
                 {
@@ -82,7 +80,7 @@ namespace WOCChess.Game
                 i++;
             }
             i++;
-            if (Char.IsLetter(fen[i]))
+            if (fen[i] != '-')
             {
                 if (fen[i + 1] == '3') //white can be en passanted
                 {
@@ -93,7 +91,7 @@ namespace WOCChess.Game
                     game.BlackEPPawns = Bitboard.GetBoard($"{fen[i]}{fen[i + 1]}") << 8;
                 }
             }
-            i += 3;
+            i += 2;
             string halfMoves = "";
             while (fen[i] != ' ')
             {
@@ -101,6 +99,13 @@ namespace WOCChess.Game
                 i++;
             }
             game.HalfMoves = Convert.ToInt32(halfMoves);
+            i++;
+            string fullMoves = "";
+            while (fen.Length > i)
+            {
+                fullMoves += $"{fen[i]}";
+                i++;
+            }
             return game;
         }
     }

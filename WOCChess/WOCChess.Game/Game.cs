@@ -9,22 +9,22 @@ namespace WOCChess.Game
         public bool Turn = true; //true is white, false is black
         public bool Check = false;
         public int HalfMoves = 0;
+        public int FullMoves = 0;
 
-        public ulong WhitePawns = 0B_000000000000000000000000000000000000000000000000_11111111_00000000UL;
-        //public ulong WhiteRooks = 0B_000000000000000000000000000000000000000000000000_00000000_10000001UL;
-        public ulong WhiteRooks = 0B_000000000000000000000000000000000010000000001000_00000000_00000000UL;
-        public ulong WhiteKnights = 0B_000000000000000000000000000000000000000000000000_00000000_01000010UL;
-        public ulong WhiteBishops = 0B_000000000000000000000000000000000000000000000000_00000000_00100100UL;
-        public ulong WhiteQueens = 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
-        public ulong WhiteKing = 0B_000000000000000000000000000000000000000000000000_00000000_00010000UL;
-        public ulong WhiteEPPawns = 0b_00000000_00000000_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackPawns = 0b_00000000_11111111_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackRooks = 0b_10000001_00000000_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackKnights = 0b_01000010_00000000_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackBishops = 0b_00100100_00000000_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackQueens = 0b_00001000_00000000_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackKing = 0b_00010000_00000000_000000000000000000000000000000000000000000000000UL;
-        public ulong BlackEPPawns = 0b_00000000_00000000_000000000000000000000000000000000000000000000000UL;
+        public ulong WhitePawns = 0UL;
+        public ulong WhiteRooks = 0UL;
+        public ulong WhiteKnights = 0UL;
+        public ulong WhiteBishops = 0UL;
+        public ulong WhiteQueens = 0UL;
+        public ulong WhiteKing = 0UL;
+        public ulong WhiteEPPawns = 0UL;
+        public ulong BlackPawns = 0UL;
+        public ulong BlackRooks = 0UL;
+        public ulong BlackKnights = 0UL;
+        public ulong BlackBishops = 0UL;
+        public ulong BlackQueens = 0UL;
+        public ulong BlackKing = 0UL;
+        public ulong BlackEPPawns = 0UL;
 
         public bool WhiteLongCastle = true;
         public bool WhiteShortCastle = true;
@@ -39,6 +39,24 @@ namespace WOCChess.Game
         public ulong BlackAttacks => ValidMoves.Knight(BlackKnights, AllBlackPieces) | GetBlackPawnAttacks() | ValidMoves.King(BlackKing, AllBlackPieces) 
         | ValidMoves.Queen(BlackQueens, AllBlackPieces, AllWhitePieces) | ValidMoves.Rook(BlackRooks, AllBlackPieces, AllWhitePieces) | ValidMoves.Bishop(BlackBishops, AllBlackPieces, AllWhitePieces);*/
         
+        public void Default()
+        {
+            WhitePawns = 0B_000000000000000000000000000000000000000000000000_11111111_00000000UL;
+            WhiteRooks = 0B_000000000000000000000000000000000010000000001000_00000000_00000000UL;
+            WhiteKnights = 0B_000000000000000000000000000000000000000000000000_00000000_01000010UL;
+            WhiteBishops = 0B_000000000000000000000000000000000000000000000000_00000000_00100100UL;
+            WhiteQueens = 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
+            WhiteKing = 0B_000000000000000000000000000000000000000000000000_00000000_00010000UL;
+            WhiteEPPawns = 0b_00000000_00000000_000000000000000000000000000000000000000000000000UL;
+            BlackPawns = 0b_00000000_11111111_000000000000000000000000000000000000000000000000UL;
+            BlackRooks = 0b_10000001_00000000_000000000000000000000000000000000000000000000000UL;
+            BlackKnights = 0b_01000010_00000000_000000000000000000000000000000000000000000000000UL;
+            BlackBishops = 0b_00100100_00000000_000000000000000000000000000000000000000000000000UL;
+            BlackQueens = 0b_00001000_00000000_000000000000000000000000000000000000000000000000UL;
+            BlackKing = 0b_00010000_00000000_000000000000000000000000000000000000000000000000UL;
+            BlackEPPawns = 0b_00000000_00000000_000000000000000000000000000000000000000000000000UL;
+        }
+
         public void Start()
         {
             WhiteToMove?.Invoke();
