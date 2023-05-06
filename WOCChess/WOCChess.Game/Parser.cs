@@ -9,7 +9,6 @@ namespace WOCChess.Game
             int i = 0;
             while (fen[i] != ' ')
             {
-                Console.WriteLine(pos);
                 switch (fen[i])
                 {
                     case 'P':

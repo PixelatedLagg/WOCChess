@@ -73,7 +73,7 @@ namespace WOCChess.Game
 
         public ulong GetWhiteMoves()
         {
-            ulong whiteMoves = GetWhitePawnMoves() | ValidMoves.KnightChecks(WhiteKnights) | ValidMoves.KingChecks(WhiteKing);
+            ulong whiteMoves = GetWhitePawnMoves() | ValidMoves.KnightChecks(WhiteKnights) | ValidMoves.KingMoves(WhiteKing, GetBlackChecks());
             for (int i = 0; i < 64; i++) //iterating over rooks
             {
                 if ((WhiteRooks | 1UL << i) == WhiteRooks) //found a rook
@@ -154,7 +154,7 @@ namespace WOCChess.Game
 
         public ulong GetBlackMoves()
         {
-            ulong blackMoves = GetBlackPawnMoves() | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingChecks(BlackKing);
+            ulong blackMoves = GetBlackPawnMoves() | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingMoves(BlackKing, GetWhiteChecks());
             for (int i = 0; i < 64; i++) //iterating over rooks
             {
                 if ((BlackRooks | 1UL << i) == BlackRooks) //found a rook
@@ -240,15 +240,16 @@ namespace WOCChess.Game
             ((((BlackPawns & Bitboard.ClearFile(File.A)) >> 9) | ((BlackPawns & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
         }
 
-        /*public bool MoveWhiteKing(ulong king)
+        public bool MoveWhiteKing(ulong king)
         {
-            if ((ValidMoves.King(WhiteKing, AllWhitePieces) & king) == 0 || (AllWhitePieces & king) != 0 || (king & BlackAttacks) != 0) //check for valid moves, no check, and 
+            if ((ValidMoves.KingMoves(WhiteKing, AllWhitePieces) & king) == 0) //check if move is one of the valid moves
             {
                 return false;
             }
-
+            HalfMoves++;
+            WhiteKing = king;
             return true;
-        }*/
+        }
 
         /// <summary>Promote a white pawn.</summary>
         /// <param name="pawn">The white pawn to promote.</param>

@@ -1,7 +1,9 @@
 todo:
--add pawn promotion
--add en passante (no idea how to spell it)
--add castling short and long
+-add castling
+-finish halfmove count
+-finish fullmvoe count
+-fix king moves
+-finish adding en passant
 
 
 
@@ -10,8 +12,3 @@ BitBoards[piece] |= 1UL << to; //set bit at current position
 
 game.WhiteRooks |= temp >> 8; //add temp rook
 game.WhiteRooks ^= rook; //remove previous rook
-
-verification includes:
--is correct turn
--piece exists
--piece isnt moving into check (either by pin or king moving into check)
