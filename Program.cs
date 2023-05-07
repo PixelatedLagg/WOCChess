@@ -4,7 +4,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Game game = Parser.LoadFEN("8/n6k/8/3p4/1R1Pr3/7B/3P3p/K7 w - - 0 1");
-        Bitboard.Debug(ValidMoves.KingMoves(game.WhiteKing, game.GetBlackChecks()));
+        Game game = Parser.LoadFEN("2r5/4K2B/np6/8/6p1/2P5/6NN/7k w - - 0 1");
+        Bitboard.Debug(game.GetBlackChecks());
+        //Bitboard.Debug(ValidMoves.KingMoves(game.WhiteKing, game.GetBlackChecks()));
+        //Bitboard.Debug(ValidMoves.KingMoves(0b_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00001000UL, 0));
     }
 }

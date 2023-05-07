@@ -1,8 +1,7 @@
 todo:
 -add castling
 -finish halfmove count
--finish fullmvoe count
--fix king moves
+-finish fullmove count
 -finish adding en passant
 
 

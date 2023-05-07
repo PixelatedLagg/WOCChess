@@ -82,7 +82,7 @@ namespace WOCChess.Game
             temp = bishop; //for top right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
                 if ((temp << 9 & allPieces) != 0)
                 {
                     break;
@@ -93,7 +93,7 @@ namespace WOCChess.Game
             temp = bishop; //for bottom right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
                 if ((temp >> 7 & allPieces) != 0)
                 {
                     break;
@@ -111,14 +111,14 @@ namespace WOCChess.Game
             | (knight & Bitboard.ClearFile(File.H)) >> 15 | (knight & Bitboard.ClearFile(File.A)) >> 17 | (knight & Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B)) >> 10);
         }
 
-        public static ulong KingChecks(ulong king) //broken
+        public static ulong KingChecks(ulong king)
         {
             ulong kingClipFileH = Bitboard.ClearFile(File.H) & king;
             ulong kingClipFileA = Bitboard.ClearFile(File.A) & king;
             return (kingClipFileA << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileH >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1);
         }
 
-        public static ulong KingMoves(ulong king, ulong otherChecks) //WIP
+        public static ulong KingMoves(ulong king, ulong otherChecks)
         {
             ulong kingClipFileH = Bitboard.ClearFile(File.H) & king;
             ulong kingClipFileA = Bitboard.ClearFile(File.A) & king;
@@ -127,12 +127,12 @@ namespace WOCChess.Game
 
         public static ulong WhitePawnChecks(ulong pawn)
         {
-            return ((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9);
+            return ((Bitboard.ClearFile(File.A) & pawn) << 7) | ((Bitboard.ClearFile(File.H) & pawn) << 9);
         }
 
         public static ulong BlackPawnChecks(ulong pawn)
         {
-            return ((pawn & Bitboard.ClearFile(File.A)) >> 7) | ((pawn & Bitboard.ClearFile(File.H)) >> 9);
+            return ((Bitboard.ClearFile(File.A) & pawn) >> 7) | ((Bitboard.ClearFile(File.H) & pawn) >> 9);
         }
 
         public static ulong RookMovesWhite(ulong rook, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
@@ -402,7 +402,7 @@ namespace WOCChess.Game
             temp = bishop; //for top right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
                 if ((temp << 9 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
@@ -427,7 +427,7 @@ namespace WOCChess.Game
             temp = bishop; //for bottom right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
                 if ((temp >> 7 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
@@ -508,7 +508,7 @@ namespace WOCChess.Game
             temp = bishop; //for top right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
                 if ((temp << 9 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
@@ -533,7 +533,7 @@ namespace WOCChess.Game
             temp = bishop; //for bottom right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.A) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
                 if ((temp >> 7 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
