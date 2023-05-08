@@ -41,5 +41,10 @@ namespace WOCChess.Game
             ulong empty = 0B_0000000000000000000000000000000000000000000000000000000000000000UL;
             return empty |= 1UL << position[0] - 'A' + (position[1] - '1') * 8;
         }
+
+        public static ulong[] DivideBoard() //will divide board of many positions into an array featuring each position
+        {
+
+        }
     }
 }
