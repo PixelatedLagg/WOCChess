@@ -82,7 +82,7 @@ namespace WOCChess.Game
             temp = bishop; //for top right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
                 if ((temp << 9 & allPieces) != 0)
                 {
                     break;
@@ -93,7 +93,7 @@ namespace WOCChess.Game
             temp = bishop; //for bottom right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
                 if ((temp >> 7 & allPieces) != 0)
                 {
                     break;
@@ -402,7 +402,7 @@ namespace WOCChess.Game
             temp = bishop; //for top right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
                 if ((temp << 9 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
@@ -427,7 +427,7 @@ namespace WOCChess.Game
             temp = bishop; //for bottom right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
                 if ((temp >> 7 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
@@ -508,7 +508,7 @@ namespace WOCChess.Game
             temp = bishop; //for top right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
                 if ((temp << 9 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;
@@ -533,7 +533,7 @@ namespace WOCChess.Game
             temp = bishop; //for bottom right
             while (temp != 0)
             {
-                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R8);
+                temp &= Bitboard.ClearFile(File.H) & Bitboard.ClearRank(Rank.R1);
                 if ((temp >> 7 & friendly) != 0) //if overlap with friendly pieces, stop and dont save
                 {
                     break;

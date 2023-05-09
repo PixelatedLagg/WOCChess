@@ -42,9 +42,15 @@ namespace WOCChess.Game
             return empty |= 1UL << position[0] - 'A' + (position[1] - '1') * 8;
         }
 
-        public static ulong[] DivideBoard() //will divide board of many positions into an array featuring each position
+        public static IEnumerable<ulong> DivideBoard(ulong board) //will divide board of many positions into an array featuring each position
         {
-
+            for (int i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((board | 1UL << i) == board) //found a position
+                {
+                    yield return 1UL << i;
+                }
+            }
         }
     }
 }
