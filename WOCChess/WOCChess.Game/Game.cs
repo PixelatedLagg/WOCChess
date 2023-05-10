@@ -277,6 +277,7 @@ namespace WOCChess.Game
                     break;
             }
             BlackToMove?.Invoke();
+            FullMoves++;
         }
 
         /// <summary>Promote a black pawn.</summary>
@@ -305,19 +306,11 @@ namespace WOCChess.Game
                     break;
             }
             WhiteToMove?.Invoke();
+            FullMoves++;
         }
 
         public void CastleWhite(bool longCastle)
         {
-            if (!Turn)
-            {
-                Error?.Invoke("CastleWhite: Incorrect turn.");
-                return;
-            }
-            if (Check)
-            {
-                Error?.Invoke("CastleWhite: Cannot castle while in check.");
-            }
             //check if king moved
         }
     }
