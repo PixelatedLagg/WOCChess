@@ -256,7 +256,7 @@ namespace WOCChess.Game
         /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void PromoteWhite(ulong pawn, PromotionPiece promotionPiece)
         {
-            if (WhitePawns != (WhitePawns & pawn) || pawn == (pawn & Bitboard.MaskRank(Rank.R7)))
+            if (!WhitePawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R7).Contains(pawn))
             {
                 return;
             }
@@ -277,7 +277,6 @@ namespace WOCChess.Game
                     break;
             }
             BlackToMove?.Invoke();
-            FullMoves++;
         }
 
         /// <summary>Promote a black pawn.</summary>
@@ -285,7 +284,7 @@ namespace WOCChess.Game
         /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void PromoteBlack(ulong pawn, PromotionPiece promotionPiece)
         {
-            if (BlackPawns != (BlackPawns & pawn) || pawn == (pawn & Bitboard.MaskRank(Rank.R1)))
+            if (!BlackPawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R2).Contains(pawn))
             {
                 return;
             }

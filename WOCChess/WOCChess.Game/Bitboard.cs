@@ -52,5 +52,7 @@ namespace WOCChess.Game
                 }
             }
         }
+
+        public static bool Contains(this ulong board, ulong piece) => (board & piece) != 0;
     }
 }
