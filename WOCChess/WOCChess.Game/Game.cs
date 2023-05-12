@@ -310,7 +310,23 @@ namespace WOCChess.Game
 
         public void CastleWhite(bool longCastle)
         {
-            //check if king moved
+            if (longCastle)
+            {
+                if (!WhiteLongCastle)
+                {
+                    return;
+                }
+                //check if castling through check
+                //check if king is still in check after
+                //check if king is currently in check
+            }
+            else
+            {
+                if (!WhiteShortCastle)
+                {
+                    return;
+                }
+            }
         }
     }
 }
