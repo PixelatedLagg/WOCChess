@@ -312,20 +312,24 @@ namespace WOCChess.Game
         {
             if (longCastle)
             {
-                if (!WhiteLongCastle)
-                {
-                    return;
-                }
-                //check if castling through check
-                //check if king is still in check after
-                //check if king is currently in check
+                #if verification
+                    if (!WhiteLongCastle)
+                    {
+                        return;
+                    }
+                    //check if castling through check
+                    //check if king is still in check after
+                    //check if king is currently in check
+                #endif
             }
             else
             {
-                if (!WhiteShortCastle)
-                {
-                    return;
-                }
+                #if verification
+                    if (!WhiteShortCastle)
+                    {
+                        return;
+                    }
+                #endif
             }
         }
     }
