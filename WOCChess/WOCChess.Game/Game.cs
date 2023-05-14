@@ -317,15 +317,20 @@ namespace WOCChess.Game
                     {
                         return;
                     }
-                    //check if castling through check
-                    //check if king is still in check after
-                    //check if king is currently in check
+                    if (GetBlackChecks().Contains(0B_000000000000000000000000000000000000000000000000_00000000_00011110UL))
+                    {
+                        return;
+                    }
                 #endif
             }
             else
             {
                 #if verification
                     if (!WhiteShortCastle)
+                    {
+                        return;
+                    }
+                    if (GetBlackChecks().Contains(0B_000000000000000000000000000000000000000000000000_00000000_01110000UL))
                     {
                         return;
                     }
