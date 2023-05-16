@@ -341,5 +341,39 @@ namespace WOCChess.Game
                 WhiteRooks |= 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
             }
         }
+
+        public void CastleBlack(bool longCastle)
+        {
+            if (longCastle)
+            {
+                #if verification
+                    if (!BlackLongCastle)
+                    {
+                        return;
+                    }
+                    if (GetWhiteChecks().Contains(0B_00011110_0000000000000000000000000000000000000000_00000000_00000000UL))
+                    {
+                        return;
+                    }
+                #endif
+                BlackKing = 0B_01000000_0000000000000000000000000000000000000000_00000000_00000000UL;
+                BlackRooks |= 0B_00100000_0000000000000000000000000000000000000000_00000000_00000000UL;
+            }
+            else
+            {
+                #if verification
+                    if (!WhiteShortCastle)
+                    {
+                        return;
+                    }
+                    if (GetBlackChecks().Contains(0B_000000000000000000000000000000000000000000000000_00000000_01110000UL))
+                    {
+                        return;
+                    }
+                #endif
+                WhiteKing = 0B_000000000000000000000000000000000000000000000000_00000000_00000100UL;
+                WhiteRooks |= 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
+            }
+        }
     }
 }
