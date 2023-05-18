@@ -242,10 +242,12 @@ namespace WOCChess.Game
 
         public bool MoveWhiteKing(ulong king)
         {
-            if ((ValidMoves.KingMoves(WhiteKing, AllWhitePieces) & king) == 0) //check if move is one of the valid moves
-            {
-                return false;
-            }
+            #if verification
+                if ((ValidMoves.KingMoves(WhiteKing, AllWhitePieces) & king) == 0) //check if move is one of the valid moves
+                {
+                    return false;
+                }
+            #endif
             HalfMoves++;
             WhiteKing = king;
             return true;
@@ -256,10 +258,12 @@ namespace WOCChess.Game
         /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void PromoteWhite(ulong pawn, PromotionPiece promotionPiece)
         {
-            if (!WhitePawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R7).Contains(pawn))
-            {
-                return;
-            }
+            #if verification
+                if (!WhitePawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R7).Contains(pawn))
+                {
+                    return;
+                }
+            #endif
             WhitePawns ^= pawn;
             switch (promotionPiece)
             {
@@ -284,10 +288,12 @@ namespace WOCChess.Game
         /// <param name="promotionPiece">The piece to get from promotion.</param>
         public void PromoteBlack(ulong pawn, PromotionPiece promotionPiece)
         {
-            if (!BlackPawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R2).Contains(pawn))
-            {
-                return;
-            }
+            #if verification
+                if (!BlackPawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R2).Contains(pawn))
+                {
+                    return;
+                }
+            #endif
             BlackPawns ^= pawn;
             switch (promotionPiece)
             {
