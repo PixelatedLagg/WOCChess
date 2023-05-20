@@ -259,7 +259,7 @@ namespace WOCChess.Game
         public void PromoteWhite(ulong pawn, PromotionPiece promotionPiece)
         {
             #if verification
-                if (!WhitePawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R7).Contains(pawn))
+                if (!Turn || !WhitePawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R7).Contains(pawn))
                 {
                     return;
                 }
@@ -289,7 +289,7 @@ namespace WOCChess.Game
         public void PromoteBlack(ulong pawn, PromotionPiece promotionPiece)
         {
             #if verification
-                if (!BlackPawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R2).Contains(pawn))
+                if (turn || !BlackPawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R2).Contains(pawn))
                 {
                     return;
                 }
@@ -319,11 +319,7 @@ namespace WOCChess.Game
             if (longCastle)
             {
                 #if verification
-                    if (!WhiteLongCastle)
-                    {
-                        return;
-                    }
-                    if (GetBlackChecks().Contains(0B_000000000000000000000000000000000000000000000000_00000000_00011110UL))
+                    if (!Turn || !WhiteLongCastle || GetBlackChecks().Contains(0B_000000000000000000000000000000000000000000000000_00000000_00011110UL))
                     {
                         return;
                     }
@@ -334,11 +330,7 @@ namespace WOCChess.Game
             else
             {
                 #if verification
-                    if (!WhiteShortCastle)
-                    {
-                        return;
-                    }
-                    if (GetBlackChecks().Contains(0B_000000000000000000000000000000000000000000000000_00000000_01110000UL))
+                    if (!Turn || !WhiteShortCastle || GetBlackChecks().Contains(0B_000000000000000000000000000000000000000000000000_00000000_01110000UL))
                     {
                         return;
                     }
@@ -346,7 +338,6 @@ namespace WOCChess.Game
                 WhiteKing = 0B_000000000000000000000000000000000000000000000000_00000000_00000100UL;
                 WhiteRooks |= 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
             }
-
         }
 
         public void CastleBlack(bool longCastle)
@@ -354,11 +345,7 @@ namespace WOCChess.Game
             if (longCastle)
             {
                 #if verification
-                    if (!BlackLongCastle)
-                    {
-                        return;
-                    }
-                    if (GetWhiteChecks().Contains(0B_00011110_0000000000000000000000000000000000000000_00000000_00000000UL))
+                    if (Turn || !BlackLongCastle || GetWhiteChecks().Contains(0B_00011110_0000000000000000000000000000000000000000_00000000_00000000UL))
                     {
                         return;
                     }
@@ -369,11 +356,7 @@ namespace WOCChess.Game
             else
             {
                 #if verification
-                    if (!BlackShortCastle)
-                    {
-                        return;
-                    }
-                    if (GetWhiteChecks().Contains(0B_01110000_0000000000000000000000000000000000000000_00000000_00000000UL))
+                    if (Turn || !BlackShortCastle || GetWhiteChecks().Contains(0B_01110000_0000000000000000000000000000000000000000_00000000_00000000UL))
                     {
                         return;
                     }
@@ -381,11 +364,17 @@ namespace WOCChess.Game
                 BlackKing = 0B_01000000_0000000000000000000000000000000000000000_00000000_00000000UL;
                 BlackRooks |= 0B_00100000_0000000000000000000000000000000000000000_00000000_00000000UL;
             }
+            FullMoves++;
         }
 
-        public void MoveBlackPawns()
+        public void MoveBlackPawns(ulong position)
         {
-            
+            #if verification
+                if (Turn || !GetBlackPawnMoves().Contains(position))
+                {
+                    return;
+                }
+            #endif
         }
     }
 }
