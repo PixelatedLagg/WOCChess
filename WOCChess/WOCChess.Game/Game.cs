@@ -62,18 +62,15 @@ namespace WOCChess.Game
             WhiteToMove?.Invoke();
         }
 
-        /// <summary>Get all valid moves for a white pawn.</summary>
-        /// <param name="knight">The white pawn to get all valid moves for.</param>
-        /// <param name="friendly">All pieces friendly to the knight.</param>
-        public ulong GetWhitePawnMoves()
+        public ulong GetWhitePawnMoves(ulong pawn)
         {
-            return ((WhitePawns << 8 & ~AllPieces) | (((WhitePawns << 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces) | 
-            ((((WhitePawns & Bitboard.ClearFile(File.A)) << 7) | ((WhitePawns & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
+            return ((pawn << 8 & ~AllPieces) | (((pawn << 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces) | 
+            ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
         }
 
         public ulong GetWhiteMoves()
         {
-            ulong whiteMoves = GetWhitePawnMoves() | ValidMoves.KnightChecks(WhiteKnights) | ValidMoves.KingMoves(WhiteKing, GetBlackChecks());
+            ulong whiteMoves = GetWhitePawnMoves(WhitePawns) | ValidMoves.KnightChecks(WhiteKnights) | ValidMoves.KingMoves(WhiteKing, GetBlackChecks());
             for (int i = 0; i < 64; i++) //iterating over rooks
             {
                 if ((WhiteRooks | 1UL << i) == WhiteRooks) //found a rook
@@ -154,7 +151,7 @@ namespace WOCChess.Game
 
         public ulong GetBlackMoves()
         {
-            ulong blackMoves = GetBlackPawnMoves() | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingMoves(BlackKing, GetWhiteChecks());
+            ulong blackMoves = GetBlackPawnMoves(BlackPawns) | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingMoves(BlackKing, GetWhiteChecks());
             for (int i = 0; i < 64; i++) //iterating over rooks
             {
                 if ((BlackRooks | 1UL << i) == BlackRooks) //found a rook
@@ -234,10 +231,10 @@ namespace WOCChess.Game
         }
 
         /// <summary>Get all valid moves for a black pawn.</summary>
-        public ulong GetBlackPawnMoves()
+        public ulong GetBlackPawnMoves(ulong pawn)
         {
-            return ((BlackPawns >> 8 & ~AllPieces) | ((((BlackPawns >> 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces)) | 
-            ((((BlackPawns & Bitboard.ClearFile(File.A)) >> 9) | ((BlackPawns & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
+            return ((pawn >> 8 & ~AllPieces) | ((((pawn >> 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces)) | 
+            ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
         }
 
         public bool MoveWhiteKing(ulong king)
@@ -338,6 +335,7 @@ namespace WOCChess.Game
                 WhiteKing = 0B_000000000000000000000000000000000000000000000000_00000000_00000100UL;
                 WhiteRooks |= 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
             }
+            WhiteEPPawns = 0;
         }
 
         public void CastleBlack(bool longCastle)
@@ -365,16 +363,18 @@ namespace WOCChess.Game
                 BlackRooks |= 0B_00100000_0000000000000000000000000000000000000000_00000000_00000000UL;
             }
             FullMoves++;
+            BlackEPPawns = 0;
         }
 
-        public void MoveBlackPawns(ulong position)
+        public void MoveBlackPawn(ulong previous, ulong new)
         {
             #if verification
-                if (Turn || !GetBlackPawnMoves().Contains(position))
+                if (Turn || !BlackPawns.Contains(previous) || !GetBlackPawnMoves(previous).Contains(new))
                 {
                     return;
                 }
             #endif
+            
         }
     }
 }
