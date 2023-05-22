@@ -366,15 +366,21 @@ namespace WOCChess.Game
             BlackEPPawns = 0;
         }
 
-        public void MoveBlackPawn(ulong previous, ulong new)
+        public void MoveBlackPawn(ulong previous, ulong current)
         {
             #if verification
-                if (Turn || !BlackPawns.Contains(previous) || !GetBlackPawnMoves(previous).Contains(new))
+                if (Turn || !BlackPawns.Contains(previous) || !GetBlackPawnMoves(previous).Contains(current))
                 {
                     return;
                 }
             #endif
-            
+            BlackPawns ^= previous;
+            BlackPawns |= current;
+            if (Bitboard.MaskRank(Rank.R7).Contains(previous) && Bitboard.MaskRank(Rank.R5).Contains(current))
+            {
+                BlackEPPawns = current;
+            }
+            FullMoves++;
         }
     }
 }
