@@ -366,6 +366,23 @@ namespace WOCChess.Game
             BlackEPPawns = 0;
         }
 
+        public void MoveWhitePawn(ulong previous, ulong current)
+        {
+            #if verification
+                if (Turn || !WhitePawns.Contains(previous) || !GetWhitePawnMoves(previous).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            WhitePawns ^= previous;
+            WhitePawns |= current;
+            if (Bitboard.MaskRank(Rank.R2).Contains(previous) && Bitboard.MaskRank(Rank.R4).Contains(current))
+            {
+                WhiteEPPawns = current;
+            }
+            BlackToMove?.Invoke();
+        }
+
         public void MoveBlackPawn(ulong previous, ulong current)
         {
             #if verification
@@ -381,6 +398,7 @@ namespace WOCChess.Game
                 BlackEPPawns = current;
             }
             FullMoves++;
+            WhiteToMove?.Invoke();
         }
     }
 }
