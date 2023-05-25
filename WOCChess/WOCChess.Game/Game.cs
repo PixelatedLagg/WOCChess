@@ -414,5 +414,19 @@ namespace WOCChess.Game
             BlackEPPawns = 0;
             BlackToMove?.Invoke();
         }
+
+        public void MoveBlackKnight(ulong previous, ulong current)
+        {
+            #if verification
+                if (Turn || !BlackKnights.Contains(previous) || !GetKnightMoves(previous).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            BlackKnights ^= previous;
+            BlackKnights |= current;
+            WhiteEPPawns = 0;
+            WhiteToMove?.Invoke();
+        }
     }
 }
