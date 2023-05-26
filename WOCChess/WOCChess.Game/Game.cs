@@ -428,5 +428,19 @@ namespace WOCChess.Game
             WhiteEPPawns = 0;
             WhiteToMove?.Invoke();
         }
+
+        public void MoveWhiteRook(ulong previous, ulong current)
+        {
+            #if verification
+                if (!Turn || !WhiteRooks.Contains(previous) || !ValidMoves.RookMovesWhite(previous).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            WhiteRooks ^= previous;
+            WhiteRooks |= current;
+            BlackEPPawns = 0;
+            BlackToMove?.Invoke();
+        }
     }
 }
