@@ -446,7 +446,7 @@ namespace WOCChess.Game
         public void MoveBlackRook(ulong previous, ulong current)
         {
             #if verification
-                if (Turn || !BlackRooks.Contains(previous) || !ValidMoves.RookMovesBlack(previous).Contains(current))
+                if (Turn || !BlackRooks.Contains(previous) || !ValidMoves.RookMovesBlack(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
                 {
                     return;
                 }
@@ -455,6 +455,20 @@ namespace WOCChess.Game
             BlackRooks |= current;
             WhiteEPPawns = 0;
             WhiteToMove?.Invoke();
+        }
+
+        public void MoveWhiteBishop(ulong previous, ulong current)
+        {
+            #if verification
+                if (!Turn || !WhiteBishops.Contains(previous) || !ValidMoves.BishopMovesWhite(previous, AllWhitePieces, AllBlackPieces, this).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            WhiteBishops ^= previous;
+            WhiteBishops |= current;
+            BlackEPPawns = 0;
+            BlackToMove?.Invoke();
         }
     }
 }

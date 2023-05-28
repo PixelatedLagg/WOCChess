@@ -1,8 +1,6 @@
 todo:
--add castling
--finish halfmove count
--finish fullmove count
--finish adding en passant
+    fix method calls in Game.cs
+    (for pixel) fix local intellisense
 
 
 
