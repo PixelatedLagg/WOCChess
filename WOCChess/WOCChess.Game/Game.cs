@@ -369,7 +369,7 @@ namespace WOCChess.Game
         public void MoveWhitePawn(ulong previous, ulong current)
         {
             #if verification
-                if (Turn || !WhitePawns.Contains(previous) || !GetWhitePawnMoves(previous).Contains(current))
+                if (Turn || !WhitePawns.Contains(previous) || !GetWhitePawnMoves(previous, AllWhitePieces, AllBlackPieces, this).Contains(current))
                 {
                     return;
                 }
@@ -386,7 +386,7 @@ namespace WOCChess.Game
         public void MoveBlackPawn(ulong previous, ulong current)
         {
             #if verification
-                if (Turn || !BlackPawns.Contains(previous) || !GetBlackPawnMoves(previous).Contains(current))
+                if (Turn || !BlackPawns.Contains(previous) || !GetBlackPawnMoves(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
                 {
                     return;
                 }
@@ -404,7 +404,7 @@ namespace WOCChess.Game
         public void MoveWhiteKnight(ulong previous, ulong current)
         {
             #if verification
-                if (!Turn || !WhiteKnights.Contains(previous) || !GetKnightMoves(previous).Contains(current))
+                if (!Turn || !WhiteKnights.Contains(previous) || !GetKnightMoves(previous, AllWhitePieces, AllBlackPieces, this).Contains(current))
                 {
                     return;
                 }
@@ -418,7 +418,7 @@ namespace WOCChess.Game
         public void MoveBlackKnight(ulong previous, ulong current)
         {
             #if verification
-                if (Turn || !BlackKnights.Contains(previous) || !GetKnightMoves(previous).Contains(current))
+                if (Turn || !BlackKnights.Contains(previous) || !GetKnightMoves(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
                 {
                     return;
                 }
@@ -432,7 +432,7 @@ namespace WOCChess.Game
         public void MoveWhiteRook(ulong previous, ulong current)
         {
             #if verification
-                if (!Turn || !WhiteRooks.Contains(previous) || !ValidMoves.RookMovesWhite(previous).Contains(current))
+                if (!Turn || !WhiteRooks.Contains(previous) || !ValidMoves.RookMovesWhite(previous, AllWhitePieces, AllBlackPieces, this).Contains(current))
                 {
                     return;
                 }

@@ -8,4 +8,4 @@ public class Program
         Bitboard.Debug(ValidMoves.KingMoves(game.BlackKing, game.GetWhiteChecks()));
         Bitboard.Debug(ValidMoves.QueenMovesWhite(game.WhiteQueens, game.AllWhitePieces, game.AllBlackPieces, game));
     }
-}
+} 
