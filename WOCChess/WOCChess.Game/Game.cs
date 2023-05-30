@@ -470,5 +470,88 @@ namespace WOCChess.Game
             BlackEPPawns = 0;
             BlackToMove?.Invoke();
         }
+
+        public void Debug()
+        {
+            char[] board = "................................................................".ToCharArray();
+            int i = 0;
+            for (; i < 64; i++) //iterating over positions
+            {
+                if ((WhitePawns | 1UL << i) == WhitePawns) //found a position
+                {
+                    board[63 - i] = 'P';
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((WhiteKnights | 1UL << i) == WhiteKnights) //found a position
+                {
+                    board[63 - i] = 'N';
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((WhiteBishops | 1UL << i) == WhiteBishops) //found a position
+                {
+                    board[63 - i] = 'B';
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((WhiteQueens | 1UL << i) == WhiteQueens) //found a position
+                {
+                    board[63 - i] = 'Q';
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((WhiteKing | 1UL << i) == WhiteKing) //found a position
+                {
+                    board[63 - i] = 'K';
+                    break;
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((BlackPawns | 1UL << i) == BlackPawns) //found a position
+                {
+                    board[63 - i] = 'p';
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((BlackKnights | 1UL << i) == BlackKnights) //found a position
+                {
+                    board[63 - i] = 'n';
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((BlackBishops | 1UL << i) == BlackBishops) //found a position
+                {
+                    board[63 - i] = 'b';
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((BlackQueens | 1UL << i) == BlackQueens) //found a position
+                {
+                    board[63 - i] = 'q';
+                }
+            }
+            for (i = 0; i < 64; i++) //iterating over positions
+            {
+                if ((BlackKing | 1UL << i) == BlackKing) //found a position
+                {
+                    board[63 - i] = 'k';
+                    break;
+                }
+            }
+            IEnumerable<string> ranks = Enumerable.Range(0, 8).Select(i => (new string(board) ?? "").Substring(i * 8, 8));
+            foreach (string rank in ranks)
+            {
+                Console.WriteLine($"{rank[7]}  {rank[6]}  {rank[5]}  {rank[4]}  {rank[3]}  {rank[2]}  {rank[1]}  {rank[0]}");
+            }
+        }
     }
 }
