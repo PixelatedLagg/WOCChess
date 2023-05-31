@@ -42,7 +42,7 @@ namespace WOCChess.Game
         public void Default()
         {
             WhitePawns = 0B_000000000000000000000000000000000000000000000000_11111111_00000000UL;
-            WhiteRooks = 0B_000000000000000000000000000000000010000000001000_00000000_00000000UL;
+            WhiteRooks = 0B_000000000000000000000000000000000000000000000000_00000000_10000001UL;
             WhiteKnights = 0B_000000000000000000000000000000000000000000000000_00000000_01000010UL;
             WhiteBishops = 0B_000000000000000000000000000000000000000000000000_00000000_00100100UL;
             WhiteQueens = 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
@@ -237,19 +237,6 @@ namespace WOCChess.Game
             ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
         }
 
-        public bool MoveWhiteKing(ulong king)
-        {
-            #if verification
-                if ((ValidMoves.KingMoves(WhiteKing, AllWhitePieces) & king) == 0) //check if move is one of the valid moves
-                {
-                    return false;
-                }
-            #endif
-            HalfMoves++;
-            WhiteKing = king;
-            return true;
-        }
-
         /// <summary>Promote a white pawn.</summary>
         /// <param name="pawn">The white pawn to promote.</param>
         /// <param name="promotionPiece">The piece to get from promotion.</param>
@@ -366,6 +353,32 @@ namespace WOCChess.Game
             BlackEPPawns = 0;
         }
 
+        public bool MoveWhiteKing(ulong king)
+        {
+            #if verification
+                if ((ValidMoves.KingMoves(WhiteKing, AllWhitePieces) & king) == 0)
+                {
+                    return false;
+                }
+            #endif
+            HalfMoves++;
+            WhiteKing = king;
+            return true;
+        }
+
+        public bool MoveBlackKing(ulong king)
+        {
+            #if verification
+                if ((ValidMoves.KingMoves(BlackKing, AllBlackPieces) & king) == 0)
+                {
+                    return false;
+                }
+            #endif
+            HalfMoves++;
+            BlackKing = king;
+            return true;
+        }
+
         public void MoveWhitePawn(ulong previous, ulong current)
         {
             #if verification
@@ -471,86 +484,149 @@ namespace WOCChess.Game
             BlackToMove?.Invoke();
         }
 
-        public void Debug()
+        public void MoveBlackQueen(ulong previous, ulong current)
+        {
+            #if verification
+                if (Turn || !BlackQueens.Contains(previous) || !ValidMoves.QueenMovesBlack(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            BlackQueens ^= previous;
+            BlackQueens |= current;
+            WhiteEPPawns = 0;
+            WhiteToMove?.Invoke();
+        }
+        public void MoveWhiteQueen(ulong previous, ulong current)
+        {
+            #if verification
+                if (!Turn || !WhiteQueens.Contains(previous) || !ValidMoves.QueenMovesWhite(previous, AllWhitePieces, AllBlackPieces, this).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            WhiteQueens ^= previous;
+            WhiteQueens |= current;
+            BlackEPPawns = 0;
+            BlackToMove?.Invoke();
+        }
+
+        public void Print(bool perspective = true)
         {
             char[] board = "................................................................".ToCharArray();
             int i = 0;
-            for (; i < 64; i++) //iterating over positions
+            for (; i < 64; i++)
             {
-                if ((WhitePawns | 1UL << i) == WhitePawns) //found a position
+                if ((WhitePawns | 1UL << i) == WhitePawns)
                 {
                     board[63 - i] = 'P';
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((WhiteKnights | 1UL << i) == WhiteKnights) //found a position
+                if ((WhiteKnights | 1UL << i) == WhiteKnights)
                 {
                     board[63 - i] = 'N';
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((WhiteBishops | 1UL << i) == WhiteBishops) //found a position
+                if ((WhiteBishops | 1UL << i) == WhiteBishops)
                 {
                     board[63 - i] = 'B';
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((WhiteQueens | 1UL << i) == WhiteQueens) //found a position
+                if ((WhiteRooks | 1UL << i) == WhiteRooks)
+                {
+                    board[63 - i] = 'R';
+                }
+            }
+            for (i = 0; i < 64; i++)
+            {
+                if ((WhiteQueens | 1UL << i) == WhiteQueens)
                 {
                     board[63 - i] = 'Q';
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((WhiteKing | 1UL << i) == WhiteKing) //found a position
+                if ((WhiteKing | 1UL << i) == WhiteKing)
                 {
                     board[63 - i] = 'K';
                     break;
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((BlackPawns | 1UL << i) == BlackPawns) //found a position
+                if ((BlackPawns | 1UL << i) == BlackPawns)
                 {
                     board[63 - i] = 'p';
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((BlackKnights | 1UL << i) == BlackKnights) //found a position
+                if ((BlackKnights | 1UL << i) == BlackKnights)
                 {
                     board[63 - i] = 'n';
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((BlackBishops | 1UL << i) == BlackBishops) //found a position
+                if ((BlackBishops | 1UL << i) == BlackBishops)
                 {
                     board[63 - i] = 'b';
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((BlackQueens | 1UL << i) == BlackQueens) //found a position
+                if ((BlackRooks | 1UL << i) == BlackRooks)
+                {
+                    board[63 - i] = 'r';
+                }
+            }
+            for (i = 0; i < 64; i++)
+            {
+                if ((BlackQueens | 1UL << i) == BlackQueens)
                 {
                     board[63 - i] = 'q';
                 }
             }
-            for (i = 0; i < 64; i++) //iterating over positions
+            for (i = 0; i < 64; i++)
             {
-                if ((BlackKing | 1UL << i) == BlackKing) //found a position
+                if ((BlackKing | 1UL << i) == BlackKing)
                 {
                     board[63 - i] = 'k';
                     break;
                 }
             }
             IEnumerable<string> ranks = Enumerable.Range(0, 8).Select(i => (new string(board) ?? "").Substring(i * 8, 8));
-            foreach (string rank in ranks)
+            if (perspective)
             {
-                Console.WriteLine($"{rank[7]}  {rank[6]}  {rank[5]}  {rank[4]}  {rank[3]}  {rank[2]}  {rank[1]}  {rank[0]}");
+                for (i = 0; i < 8; i++)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(8 - i);
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine($"    {ranks.ElementAt(i)[7]}    {ranks.ElementAt(i)[6]}    {ranks.ElementAt(i)[5]}    {ranks.ElementAt(i)[4]}    {ranks.ElementAt(i)[3]}    {ranks.ElementAt(i)[2]}    {ranks.ElementAt(i)[1]}    {ranks.ElementAt(i)[0]}\n");
+                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("     a    b    c    d    e    f    g    h");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            else
+            {
+                for (i = 7; i > -1; i--)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(8 - i);
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine($"    {ranks.ElementAt(i)[7]}    {ranks.ElementAt(i)[6]}    {ranks.ElementAt(i)[5]}    {ranks.ElementAt(i)[4]}    {ranks.ElementAt(i)[3]}    {ranks.ElementAt(i)[2]}    {ranks.ElementAt(i)[1]}    {ranks.ElementAt(i)[0]}\n");
+                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("     a    b    c    d    e    f    g    h");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
     }
