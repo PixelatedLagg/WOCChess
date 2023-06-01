@@ -27,7 +27,7 @@ public class Program
             Console.ForegroundColor = ConsoleColor.Gray;
             piece = Char.ToLower((Console.ReadLine() ?? "a")[0]);
         }
-        if (piece != 'p')
+        if (piece != 'k')
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write("\nPiece position: ");

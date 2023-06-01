@@ -39,7 +39,7 @@ namespace WOCChess.Game
         public static ulong GetBoard(string position)
         {
             ulong empty = 0B_0000000000000000000000000000000000000000000000000000000000000000UL;
-            return empty |= 1UL << position[0] - 'A' + (position[1] - '1') * 8;
+            return empty |= 1UL << Char.ToLower(position[0]) - 'a' + (position[1] - '1') * 8;
         }
 
         public static IEnumerable<ulong> DivideBoard(ulong board) //will divide board of many positions into an array featuring each position

@@ -1,6 +1,8 @@
 todo:
-    fix method calls in Game.cs
-    (for pixel) fix local intellisense
+    -check for opposite checkmate on every move
+    -implement game over method hooks
+    -implement moves/halfmoves
+    -check for draw/stalemate on every move
 
 
 

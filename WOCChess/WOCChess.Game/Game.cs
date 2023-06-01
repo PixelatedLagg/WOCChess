@@ -484,6 +484,20 @@ namespace WOCChess.Game
             BlackToMove?.Invoke();
         }
 
+        public void MoveBlackBishop(ulong previous, ulong current)
+        {
+            #if verification
+                if (Turn || !BlackBishops.Contains(previous) || !ValidMoves.BishopMovesBlack(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            BlackBishops ^= previous;
+            BlackBishops |= current;
+            WhiteEPPawns = 0;
+            WhiteToMove?.Invoke();
+        }
+
         public void MoveBlackQueen(ulong previous, ulong current)
         {
             #if verification
