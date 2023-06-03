@@ -39,13 +39,30 @@ namespace WOCChess.Game
         public ulong BlackAttacks => ValidMoves.Knight(BlackKnights, AllBlackPieces) | GetBlackPawnAttacks() | ValidMoves.King(BlackKing, AllBlackPieces) 
         | ValidMoves.Queen(BlackQueens, AllBlackPieces, AllWhitePieces) | ValidMoves.Rook(BlackRooks, AllBlackPieces, AllWhitePieces) | ValidMoves.Bishop(BlackBishops, AllBlackPieces, AllWhitePieces);*/
         
-        private void WhiteVerifyAttack(ulong piece)
+        private void WhiteVerifyAttack(ulong piece) //verify any taken black pieces
         {
-            if (piece.Contains(AllBlackPieces)) //check if overlaps with any black pieces
+            if (piece.Contains(AllBlackPieces))
             {
-                //if so, get overlap
-                //compare overlap with each black piece
-                //when match is found, remove affected black piece
+                if (piece.Contains(BlackPawns))
+                {
+                    BlackPawns ^= piece;
+                }
+                if (piece.Contains(BlackKnights))
+                {
+                    BlackKnights ^= piece;
+                }
+                if (piece.Contains(BlackBishops))
+                {
+                    BlackBishops ^= piece;
+                }
+                if (piece.Contains(BlackRooks))
+                {
+                    BlackRooks ^= piece;
+                }
+                if (piece.Contains(BlackQueens))
+                {
+                    BlackQueens ^= piece;
+                }
             }
         }
 
