@@ -66,6 +66,33 @@ namespace WOCChess.Game
             }
         }
 
+        private void BlackVerifyAttack(ulong piece) //verify any taken white pieces
+        {
+            if (piece.Contains(AllWhitePieces))
+            {
+                if (piece.Contains(WhitePawns))
+                {
+                    WhitePawns ^= piece;
+                }
+                if (piece.Contains(WhiteKnights))
+                {
+                    WhiteKnights ^= piece;
+                }
+                if (piece.Contains(WhiteBishops))
+                {
+                    WhiteBishops ^= piece;
+                }
+                if (piece.Contains(WhiteRooks))
+                {
+                    WhiteRooks ^= piece;
+                }
+                if (piece.Contains(WhiteQueens))
+                {
+                    WhiteQueens ^= piece;
+                }
+            }
+        }
+
         public void Default()
         {
             WhitePawns = 0B_000000000000000000000000000000000000000000000000_11111111_00000000UL;
