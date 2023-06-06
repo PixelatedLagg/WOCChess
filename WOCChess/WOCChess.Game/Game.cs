@@ -5,7 +5,7 @@ namespace WOCChess.Game
         public Action? WhiteToMove;
         public Action? BlackToMove;
         public Action<string>? Error;
-        public Action<int>? GameEnd; //0 is white win, 1 is black win, 2 is draw
+        public Action<int>? GameEnd; //0 is white win, 1 is black win, 2 is draw by halfmove, 3 is stalemate
         public bool Turn = true; //true is white, false is black
         public bool Check = false;
         public int HalfMoves = 0;
@@ -417,6 +417,10 @@ namespace WOCChess.Game
             #endif
             HalfMoves++;
             WhiteKing = king;
+            if (HalfMoves == 100)
+            {
+                GameEnd?.Invoke(3);
+            }
             return true;
         }
 
@@ -430,6 +434,10 @@ namespace WOCChess.Game
             #endif
             HalfMoves++;
             BlackKing = king;
+            if (HalfMoves == 100)
+            {
+                GameEnd?.Invoke(3);
+            }
             return true;
         }
 
