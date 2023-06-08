@@ -122,9 +122,21 @@ namespace WOCChess.Game
             ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
         }
 
-        public bool WhiteCheckMate() => ValidMoves.KingMoves(WhiteKing, GetBlackChecks()) == 0;
+        public void WhiteCheckMate()
+        {
+            if (ValidMoves.KingMoves(WhiteKing, GetBlackChecks()) == 0)
+            {
+                GameEnd?.Invoke(1);
+            }
+        }
 
-        public bool BlackChackMate() => ValidMoves.KingMoves(BlackKing, GetWhiteChecks()) == 0;
+        public void BlackCheckMate()
+        {
+            if (ValidMoves.KingMoves(BlackKing, GetWhiteChecks()) == 0)
+            {
+                GameEnd?.Invoke(0);
+            }
+        }
 
         public ulong GetWhiteMoves()
         {
