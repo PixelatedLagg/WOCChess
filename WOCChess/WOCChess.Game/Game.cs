@@ -334,6 +334,7 @@ namespace WOCChess.Game
                     WhiteQueens |= pawn;
                     break;
             }
+            BlackCheckMate();
             BlackToMove?.Invoke();
         }
 
@@ -393,6 +394,8 @@ namespace WOCChess.Game
                 WhiteRooks |= 0B_000000000000000000000000000000000000000000000000_00000000_00001000UL;
             }
             WhiteEPPawns = 0;
+            BlackCheckMate();
+            BlackToMove?.Invoke();
         }
 
         public void CastleBlack(bool longCastle)
@@ -423,29 +426,30 @@ namespace WOCChess.Game
             BlackEPPawns = 0;
         }
 
-        public bool MoveWhiteKing(ulong king)
+        public void MoveWhiteKing(ulong king)
         {
             #if verification
                 if ((ValidMoves.KingMoves(WhiteKing, AllWhitePieces) & king) == 0)
                 {
-                    return false;
+                    return;
                 }
             #endif
             HalfMoves++;
             WhiteKing = king;
+            BlackCheckMate();
             if (HalfMoves == 100)
             {
                 GameEnd?.Invoke(3);
             }
-            return true;
+            BlackToMove?.Invoke();
         }
 
-        public bool MoveBlackKing(ulong king)
+        public void MoveBlackKing(ulong king)
         {
             #if verification
                 if ((ValidMoves.KingMoves(BlackKing, AllBlackPieces) & king) == 0)
                 {
-                    return false;
+                    return;
                 }
             #endif
             HalfMoves++;
@@ -454,7 +458,6 @@ namespace WOCChess.Game
             {
                 GameEnd?.Invoke(3);
             }
-            return true;
         }
 
         public void MoveWhitePawn(ulong previous, ulong current)
