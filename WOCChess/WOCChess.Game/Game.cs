@@ -122,12 +122,18 @@ namespace WOCChess.Game
             ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
         }
 
-        public void WhiteCheckMate()
+        public void WhiteCheckMateOrStaleMate()
         {
-            if (ValidMoves.KingMoves(WhiteKing, GetBlackChecks()) == 0)
+            ulong blackChecks = GetBlackChecks();
+            if (ValidMoves.KingMoves(WhiteKing, blackChecks) != 0)
             {
-                GameEnd?.Invoke(1);
+                return;
+            }//GameEnd?.Invoke(1);
+            if (blackChecks.Contains(WhiteKing))
+            {
+                //checkmate
             }
+            //check for stalemate
         }
 
         public void BlackCheckMate()
@@ -424,6 +430,8 @@ namespace WOCChess.Game
             }
             FullMoves++;
             BlackEPPawns = 0;
+            WhiteCheckMate();
+            WhiteToMove?.Invoke();
         }
 
         public void MoveWhiteKing(ulong king)
