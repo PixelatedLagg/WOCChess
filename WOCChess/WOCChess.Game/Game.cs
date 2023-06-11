@@ -2,8 +2,8 @@ namespace WOCChess.Game
 {
     public class Game
     {
-        public Action? WhiteToMove;
-        public Action? BlackToMove;
+        public Action<bool>? WhiteToMove;
+        public Action<bool>? BlackToMove;
         public Action<string>? Error;
         public Action<int>? GameEnd; //0 is white win, 1 is black win, 2 is draw by halfmove, 3 is stalemate
         public bool Turn = true; //true is white, false is black
@@ -113,7 +113,7 @@ namespace WOCChess.Game
 
         public void Start()
         {
-            WhiteToMove?.Invoke();
+            WhiteToMove?.Invoke(false);
         }
 
         public ulong GetWhitePawnMoves(ulong pawn)
@@ -122,18 +122,28 @@ namespace WOCChess.Game
             ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
         }
 
-        public void WhiteCheckMateOrStaleMate()
+        public void WhiteEvents()
         {
             ulong blackChecks = GetBlackChecks();
-            if (ValidMoves.KingMoves(WhiteKing, blackChecks) != 0)
-            {
-                return;
-            }//GameEnd?.Invoke(1);
+            ulong whiteMoves = GetWhiteMoves();
             if (blackChecks.Contains(WhiteKing))
             {
-                //checkmate
+                if (whiteMoves == 0)
+                {
+                    GameEnd?.Invoke(1);
+                }
+                else
+                {
+                    WhiteToMove?.Invoke(true);
+                }
             }
-            //check for stalemate
+            else
+            {
+                if (whiteMoves == 0)
+                {
+                    GameEnd?.Invoke(3);
+                }
+            }
         }
 
         public void BlackCheckMate()
@@ -144,9 +154,13 @@ namespace WOCChess.Game
             }
         }
 
-        public ulong GetWhiteMoves()
+        public ulong GetWhiteMoves(bool king = true)
         {
-            ulong whiteMoves = GetWhitePawnMoves(WhitePawns) | ValidMoves.KnightChecks(WhiteKnights) | ValidMoves.KingMoves(WhiteKing, GetBlackChecks());
+            ulong whiteMoves = GetWhitePawnMoves(WhitePawns) | ValidMoves.KnightChecks(WhiteKnights);
+            if (king)
+            {
+                whiteMoves |= ValidMoves.KingMoves(WhiteKing, GetBlackChecks());
+            }
             for (int i = 0; i < 64; i++) //iterating over rooks
             {
                 if ((WhiteRooks | 1UL << i) == WhiteRooks) //found a rook
@@ -225,9 +239,13 @@ namespace WOCChess.Game
             return whiteChecks;
         }
 
-        public ulong GetBlackMoves()
+        public ulong GetBlackMoves(bool king = true)
         {
-            ulong blackMoves = GetBlackPawnMoves(BlackPawns) | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingMoves(BlackKing, GetWhiteChecks());
+            ulong blackMoves = GetBlackPawnMoves(BlackPawns) | ValidMoves.KnightChecks(BlackKnights);
+            if (king)
+            {
+                blackMoves |= ValidMoves.KingMoves(BlackKing, GetWhiteChecks());
+            }
             for (int i = 0; i < 64; i++) //iterating over rooks
             {
                 if ((BlackRooks | 1UL << i) == BlackRooks) //found a rook
@@ -341,7 +359,7 @@ namespace WOCChess.Game
                     break;
             }
             BlackCheckMate();
-            BlackToMove?.Invoke();
+            BlackToMove?.Invoke(false);
         }
 
         /// <summary>Promote a black pawn.</summary>
@@ -371,7 +389,7 @@ namespace WOCChess.Game
                     BlackQueens |= pawn;
                     break;
             }
-            WhiteToMove?.Invoke();
+            WhiteToMove?.Invoke(false);
             FullMoves++;
         }
 
@@ -401,7 +419,7 @@ namespace WOCChess.Game
             }
             WhiteEPPawns = 0;
             BlackCheckMate();
-            BlackToMove?.Invoke();
+            BlackToMove?.Invoke(false);
         }
 
         public void CastleBlack(bool longCastle)
@@ -431,7 +449,7 @@ namespace WOCChess.Game
             FullMoves++;
             BlackEPPawns = 0;
             WhiteCheckMate();
-            WhiteToMove?.Invoke();
+            WhiteToMove?.Invoke(false);
         }
 
         public void MoveWhiteKing(ulong king)
@@ -449,7 +467,7 @@ namespace WOCChess.Game
             {
                 GameEnd?.Invoke(3);
             }
-            BlackToMove?.Invoke();
+            BlackToMove?.Invoke(false);
         }
 
         public void MoveBlackKing(ulong king)
@@ -482,7 +500,7 @@ namespace WOCChess.Game
             {
                 WhiteEPPawns = current;
             }
-            BlackToMove?.Invoke();
+            BlackToMove?.Invoke(false);
         }
 
         public void MoveBlackPawn(ulong previous, ulong current)
@@ -500,7 +518,7 @@ namespace WOCChess.Game
                 BlackEPPawns = current;
             }
             FullMoves++;
-            WhiteToMove?.Invoke();
+            WhiteToMove?.Invoke(false);
         }
 
         public void MoveWhiteKnight(ulong previous, ulong current)
@@ -514,7 +532,7 @@ namespace WOCChess.Game
             WhiteKnights ^= previous;
             WhiteKnights |= current;
             BlackEPPawns = 0;
-            BlackToMove?.Invoke();
+            BlackToMove?.Invoke(false);
         }
 
         public void MoveBlackKnight(ulong previous, ulong current)
@@ -528,7 +546,7 @@ namespace WOCChess.Game
             BlackKnights ^= previous;
             BlackKnights |= current;
             WhiteEPPawns = 0;
-            WhiteToMove?.Invoke();
+            WhiteToMove?.Invoke(false);
         }
 
         public void MoveWhiteRook(ulong previous, ulong current)
@@ -542,7 +560,7 @@ namespace WOCChess.Game
             WhiteRooks ^= previous;
             WhiteRooks |= current;
             BlackEPPawns = 0;
-            BlackToMove?.Invoke();
+            BlackToMove?.Invoke(false);
         }
 
         public void MoveBlackRook(ulong previous, ulong current)
@@ -556,7 +574,7 @@ namespace WOCChess.Game
             BlackRooks ^= previous;
             BlackRooks |= current;
             WhiteEPPawns = 0;
-            WhiteToMove?.Invoke();
+            WhiteToMove?.Invoke(false);
         }
 
         public void MoveWhiteBishop(ulong previous, ulong current)
@@ -570,7 +588,7 @@ namespace WOCChess.Game
             WhiteBishops ^= previous;
             WhiteBishops |= current;
             BlackEPPawns = 0;
-            BlackToMove?.Invoke();
+            BlackToMove?.Invoke(false);
         }
 
         public void MoveBlackBishop(ulong previous, ulong current)
@@ -584,7 +602,7 @@ namespace WOCChess.Game
             BlackBishops ^= previous;
             BlackBishops |= current;
             WhiteEPPawns = 0;
-            WhiteToMove?.Invoke();
+            WhiteToMove?.Invoke(false);
         }
 
         public void MoveBlackQueen(ulong previous, ulong current)
@@ -598,7 +616,7 @@ namespace WOCChess.Game
             BlackQueens ^= previous;
             BlackQueens |= current;
             WhiteEPPawns = 0;
-            WhiteToMove?.Invoke();
+            WhiteToMove?.Invoke(false);
         }
         public void MoveWhiteQueen(ulong previous, ulong current)
         {
@@ -611,7 +629,7 @@ namespace WOCChess.Game
             WhiteQueens ^= previous;
             WhiteQueens |= current;
             BlackEPPawns = 0;
-            BlackToMove?.Invoke();
+            BlackToMove?.Invoke(false);
         }
 
         public void Print(bool perspective = true)
