@@ -124,11 +124,13 @@ namespace WOCChess.Game
 
         public void WhiteEvents()
         {
-            ulong blackChecks = GetBlackChecks();
-            ulong whiteMoves = GetWhiteMoves();
-            if (blackChecks.Contains(WhiteKing))
+            if (HalfMoves == 100)
             {
-                if (whiteMoves == 0)
+                GameEnd?.Invoke(2);
+            }
+            if (GetBlackChecks().Contains(WhiteKing))
+            {
+                if (GetWhiteMoves() == 0)
                 {
                     GameEnd?.Invoke(1);
                 }
@@ -139,9 +141,43 @@ namespace WOCChess.Game
             }
             else
             {
-                if (whiteMoves == 0)
+                if (GetWhiteMoves() == 0)
                 {
                     GameEnd?.Invoke(3);
+                }
+                else
+                {
+                    WhiteToMove?.Invoke(false);
+                }
+            }
+        }
+
+        public void BlackEvents()
+        {
+            if (HalfMoves == 100)
+            {
+                GameEnd?.Invoke(2);
+            }
+            if (GetWhiteChecks().Contains(WhiteKing))
+            {
+                if (GetBlackMoves() == 0)
+                {
+                    GameEnd?.Invoke(0);
+                }
+                else
+                {
+                    BlackToMove?.Invoke(true);
+                }
+            }
+            else
+            {
+                if (GetBlackMoves() == 0)
+                {
+                    GameEnd?.Invoke(3);
+                }
+                else
+                {
+                    BlackToMove?.Invoke(false);
                 }
             }
         }
