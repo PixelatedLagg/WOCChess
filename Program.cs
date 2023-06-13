@@ -54,7 +54,7 @@ public class Program
         }
     }
 
-    public static void WhiteToMove()
+    public static void WhiteToMove(bool check)
     {
         game.Print();
         Input();
@@ -93,7 +93,7 @@ public class Program
         }
     }
 
-    public static void BlackToMove()
+    public static void BlackToMove(bool check)
     {
         game.Print(false);
         Input();
