@@ -116,12 +116,6 @@ namespace WOCChess.Game
             WhiteToMove?.Invoke(false);
         }
 
-        public ulong GetWhitePawnMoves(ulong pawn)
-        {
-            return ((pawn << 8 & ~AllPieces) | (((pawn << 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces) | 
-            ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces);
-        }
-
         public void WhiteEvents()
         {
             if (HalfMoves == 100)
@@ -154,6 +148,7 @@ namespace WOCChess.Game
 
         public void BlackEvents()
         {
+            FullMoves++;
             if (HalfMoves == 100)
             {
                 GameEnd?.Invoke(2);
@@ -360,11 +355,17 @@ namespace WOCChess.Game
             return blackChecks;
         }
 
+        public ulong GetWhitePawnMoves(ulong pawn)
+        {
+            return ((pawn << 8 & ~AllPieces) | (((pawn << 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces) | 
+            ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces) | ((pawn >> 1 & Bitboard.ClearFile(File.A)) & BlackEPPawns) << 8 | ((pawn << 1 & Bitboard.ClearFile(File.H)) & BlackEPPawns) << 8;
+        }
+
         /// <summary>Get all valid moves for a black pawn.</summary>
         public ulong GetBlackPawnMoves(ulong pawn)
         {
-            return ((pawn >> 8 & ~AllPieces) | ((((pawn >> 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces)) | 
-            ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces);
+            return ((pawn >> 8 & ~AllPieces) | (((pawn >> 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces) | 
+            ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces) | ((pawn >> 1 & Bitboard.ClearFile(File.A)) & WhiteEPPawns) >> 8 | ((pawn << 1 & Bitboard.ClearFile(File.H)) & WhiteEPPawns) >> 8;
         }
 
         /// <summary>Promote a white pawn.</summary>
@@ -542,7 +543,6 @@ namespace WOCChess.Game
             {
                 BlackEPPawns = current;
             }
-            FullMoves++;
             WhiteEvents();
         }
 
@@ -570,34 +570,6 @@ namespace WOCChess.Game
             #endif
             BlackKnights ^= previous;
             BlackKnights |= current;
-            WhiteEPPawns = 0;
-            WhiteEvents();
-        }
-
-        public void MoveWhiteRook(ulong previous, ulong current)
-        {
-            #if verification
-                if (!Turn || !WhiteRooks.Contains(previous) || !ValidMoves.RookMovesWhite(previous, AllWhitePieces, AllBlackPieces, this).Contains(current))
-                {
-                    return;
-                }
-            #endif
-            WhiteRooks ^= previous;
-            WhiteRooks |= current;
-            BlackEPPawns = 0;
-            BlackEvents();
-        }
-
-        public void MoveBlackRook(ulong previous, ulong current)
-        {
-            #if verification
-                if (Turn || !BlackRooks.Contains(previous) || !ValidMoves.RookMovesBlack(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
-                {
-                    return;
-                }
-            #endif
-            BlackRooks ^= previous;
-            BlackRooks |= current;
             WhiteEPPawns = 0;
             WhiteEvents();
         }
@@ -630,19 +602,34 @@ namespace WOCChess.Game
             WhiteEvents();
         }
 
-        public void MoveBlackQueen(ulong previous, ulong current)
+        public void MoveWhiteRook(ulong previous, ulong current)
         {
             #if verification
-                if (Turn || !BlackQueens.Contains(previous) || !ValidMoves.QueenMovesBlack(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
+                if (!Turn || !WhiteRooks.Contains(previous) || !ValidMoves.RookMovesWhite(previous, AllWhitePieces, AllBlackPieces, this).Contains(current))
                 {
                     return;
                 }
             #endif
-            BlackQueens ^= previous;
-            BlackQueens |= current;
+            WhiteRooks ^= previous;
+            WhiteRooks |= current;
+            BlackEPPawns = 0;
+            BlackEvents();
+        }
+
+        public void MoveBlackRook(ulong previous, ulong current)
+        {
+            #if verification
+                if (Turn || !BlackRooks.Contains(previous) || !ValidMoves.RookMovesBlack(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            BlackRooks ^= previous;
+            BlackRooks |= current;
             WhiteEPPawns = 0;
             WhiteEvents();
         }
+
         public void MoveWhiteQueen(ulong previous, ulong current)
         {
             #if verification
@@ -655,6 +642,20 @@ namespace WOCChess.Game
             WhiteQueens |= current;
             BlackEPPawns = 0;
             BlackEvents();
+        }
+
+        public void MoveBlackQueen(ulong previous, ulong current)
+        {
+            #if verification
+                if (Turn || !BlackQueens.Contains(previous) || !ValidMoves.QueenMovesBlack(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
+                {
+                    return;
+                }
+            #endif
+            BlackQueens ^= previous;
+            BlackQueens |= current;
+            WhiteEPPawns = 0;
+            WhiteEvents(); 
         }
 
         public void Print(bool perspective = true)

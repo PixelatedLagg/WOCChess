@@ -1,8 +1,5 @@
 todo:
-    -check for opposite checkmate on every move
-    -implement game over method hooks
-    -implement moves/halfmoves
-    -check for draw/stalemate on every move
+    -add enpassant in pawn moves
 
 
 
