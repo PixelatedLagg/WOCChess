@@ -512,6 +512,9 @@ namespace WOCChess.Game
             WhiteEvents();
         }
 
+        /// <summary>Move a white pawn.</summary>
+        /// <param name="previous">The position of the white pawn you are moving.</param>
+        /// <param name="current">The position you are moving the white pawn to.</param>
         public void MoveWhitePawn(ulong previous, ulong current)
         {
             #if verification
@@ -529,6 +532,9 @@ namespace WOCChess.Game
             BlackEvents();
         }
 
+        /// <summary>Move a black pawn.</summary>
+        /// <param name="previous">The position of the black pawn you are moving.</param>
+        /// <param name="current">The position you are moving the black pawn to.</param>
         public void MoveBlackPawn(ulong previous, ulong current)
         {
             #if verification
@@ -546,6 +552,9 @@ namespace WOCChess.Game
             WhiteEvents();
         }
 
+        /// <summary>Move a white knight.</summary>
+        /// <param name="previous">The position of the white knight you are moving.</param>
+        /// <param name="current">The position you are moving the white knight to.</param>
         public void MoveWhiteKnight(ulong previous, ulong current)
         {
             #if verification
@@ -560,6 +569,9 @@ namespace WOCChess.Game
             BlackEvents();
         }
 
+        /// <summary>Move a black knight.</summary>
+        /// <param name="previous">The position of the black knight you are moving.</param>
+        /// <param name="current">The position you are moving the black knight to.</param>
         public void MoveBlackKnight(ulong previous, ulong current)
         {
             #if verification
@@ -574,6 +586,9 @@ namespace WOCChess.Game
             WhiteEvents();
         }
 
+        /// <summary>Move a white bishop.</summary>
+        /// <param name="previous">The position of the white bishop you are moving.</param>
+        /// <param name="current">The position you are moving the white bishop to.</param>
         public void MoveWhiteBishop(ulong previous, ulong current)
         {
             #if verification
@@ -588,6 +603,9 @@ namespace WOCChess.Game
             BlackEvents();
         }
 
+        /// <summary>Move a black bishop.</summary>
+        /// <param name="previous">The position of the black bishop you are moving.</param>
+        /// <param name="current">The position you are moving the black bishop to.</param>
         public void MoveBlackBishop(ulong previous, ulong current)
         {
             #if verification
@@ -602,6 +620,9 @@ namespace WOCChess.Game
             WhiteEvents();
         }
 
+        /// <summary>Move a white rook.</summary>
+        /// <param name="previous">The position of the white rook you are moving.</param>
+        /// <param name="current">The position you are moving the white rook to.</param>
         public void MoveWhiteRook(ulong previous, ulong current)
         {
             #if verification
@@ -616,6 +637,9 @@ namespace WOCChess.Game
             BlackEvents();
         }
 
+        /// <summary>Move a black rook.</summary>
+        /// <param name="previous">The position of the black rook you are moving.</param>
+        /// <param name="current">The position you are moving the black rook to.</param>
         public void MoveBlackRook(ulong previous, ulong current)
         {
             #if verification
@@ -630,6 +654,9 @@ namespace WOCChess.Game
             WhiteEvents();
         }
 
+        /// <summary>Move a white queen.</summary>
+        /// <param name="previous">The position of the white queen you are moving.</param>
+        /// <param name="current">The position you are moving the white queen to.</param>
         public void MoveWhiteQueen(ulong previous, ulong current)
         {
             #if verification
@@ -644,6 +671,9 @@ namespace WOCChess.Game
             BlackEvents();
         }
 
+        /// <summary>Move a black queen.</summary>
+        /// <param name="previous">The position of the black queen you are moving.</param>
+        /// <param name="current">The position you are moving the black queen to.</param>
         public void MoveBlackQueen(ulong previous, ulong current)
         {
             #if verification
@@ -658,6 +688,8 @@ namespace WOCChess.Game
             WhiteEvents(); 
         }
 
+        /// <summary>Print out the board from a certain side's perspective. White pieces are uppercase, while black pieces are lowercase.</summary>
+        /// <param name="perspective">The perspective to flip the board to. True means white, while false means black.</param>
         public void Print(bool perspective = true)
         {
             char[] board = "................................................................".ToCharArray();

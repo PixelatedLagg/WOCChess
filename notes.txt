@@ -1,5 +1,5 @@
 todo:
-    -add enpassant in pawn moves
+    -finish castling
 
 
 
