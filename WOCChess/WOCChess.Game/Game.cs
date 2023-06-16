@@ -118,6 +118,8 @@ namespace WOCChess.Game
 
         public void WhiteEvents()
         {
+            FullMoves++;
+            WhiteEPPawns = 0;
             if (HalfMoves == 100)
             {
                 GameEnd?.Invoke(2);
@@ -148,7 +150,7 @@ namespace WOCChess.Game
 
         public void BlackEvents()
         {
-            FullMoves++;
+            BlackEPPawns = 0;
             if (HalfMoves == 100)
             {
                 GameEnd?.Invoke(2);
@@ -301,6 +303,7 @@ namespace WOCChess.Game
             return blackMoves;
         }
 
+        /// <summary>Get all black piece threats.</summary>
         public ulong GetBlackChecks()
         {
             ulong blackChecks = ValidMoves.BlackPawnChecks(BlackPawns) | ValidMoves.KnightChecks(BlackKnights) | ValidMoves.KingChecks(BlackKing);
@@ -328,6 +331,7 @@ namespace WOCChess.Game
             return blackChecks;
         }
 
+        /// <summary>Get all sliding black piece threats.</summary>
         public ulong GetBlackPins()
         {
             ulong blackChecks = 0;
@@ -355,22 +359,52 @@ namespace WOCChess.Game
             return blackChecks;
         }
 
+        /// <summary>Get all legal white pawn moves.</summary>
+        /// <param name="pawn">The position of the white pawn to check.</param>
         public ulong GetWhitePawnMoves(ulong pawn)
         {
-            return ((pawn << 8 & ~AllPieces) | (((pawn << 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces) | 
+            ulong moves = ((pawn << 8 & ~AllPieces) | (((pawn << 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R3)) << 8) & ~AllPieces) | 
             ((((pawn & Bitboard.ClearFile(File.A)) << 7) | ((pawn & Bitboard.ClearFile(File.H)) << 9)) & AllBlackPieces) | ((pawn >> 1 & Bitboard.ClearFile(File.A)) & BlackEPPawns) << 8 | ((pawn << 1 & Bitboard.ClearFile(File.H)) & BlackEPPawns) << 8;
+            ulong actualMoves = 0;
+            foreach (ulong board in Bitboard.DivideBoard(moves))
+            {
+                WhitePawns ^= pawn;
+                WhitePawns |= board;
+                if ((WhiteKing & GetBlackPins()) != 0)
+                {
+                    actualMoves |= board;
+                }
+                WhitePawns ^= board;
+                WhitePawns |= pawn;
+            }
+            return actualMoves;
         }
 
-        /// <summary>Get all valid moves for a black pawn.</summary>
+        /// <summary>Get all legal black pawn moves.</summary>
+        /// <param name="pawn">The position of the black pawn to check.</param>
         public ulong GetBlackPawnMoves(ulong pawn)
         {
-            return ((pawn >> 8 & ~AllPieces) | (((pawn >> 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces) | 
+            ulong moves = ((pawn >> 8 & ~AllPieces) | (((pawn >> 8 & ~AllPieces) & Bitboard.MaskRank(Rank.R6)) >> 8) & ~AllPieces) | 
             ((((pawn & Bitboard.ClearFile(File.A)) >> 9) | ((pawn & Bitboard.ClearFile(File.H)) >> 7)) & AllWhitePieces) | ((pawn >> 1 & Bitboard.ClearFile(File.A)) & WhiteEPPawns) >> 8 | ((pawn << 1 & Bitboard.ClearFile(File.H)) & WhiteEPPawns) >> 8;
+            ulong actualMoves = 0;
+            foreach (ulong board in Bitboard.DivideBoard(moves))
+            {
+                BlackPawns ^= pawn;
+                BlackPawns |= board;
+                if ((BlackKing & GetWhitePins()) != 0)
+                {
+                    actualMoves |= board;
+                }
+                BlackPawns ^= board;
+                BlackPawns |= pawn;
+            }
+            return actualMoves;
+
         }
 
         /// <summary>Promote a white pawn.</summary>
-        /// <param name="pawn">The white pawn to promote.</param>
-        /// <param name="promotionPiece">The piece to get from promotion.</param>
+        /// <param name="pawn">The position of the white pawn to promote.</param>
+        /// <param name="promotionPiece">The piece to promote to.</param>
         public void PromoteWhite(ulong pawn, PromotionPiece promotionPiece)
         {
             #if verification
@@ -399,8 +433,8 @@ namespace WOCChess.Game
         }
 
         /// <summary>Promote a black pawn.</summary>
-        /// <param name="pawn">The black pawn to promote.</param>
-        /// <param name="promotionPiece">The piece to get from promotion.</param>
+        /// <param name="pawn">The position of the black pawn to promote.</param>
+        /// <param name="promotionPiece">The piece to promote to.</param>
         public void PromoteBlack(ulong pawn, PromotionPiece promotionPiece)
         {
             #if verification
@@ -425,10 +459,11 @@ namespace WOCChess.Game
                     BlackQueens |= pawn;
                     break;
             }
-            FullMoves++;
             WhiteEvents();
         }
 
+        /// <summary>Castle the white king.</summary>
+        /// <param name="longCastle">Whether or not you are long castling. True means long castling, false means short castling.</param>
         public void CastleWhite(bool longCastle)
         {
             if (longCastle)
@@ -457,6 +492,8 @@ namespace WOCChess.Game
             BlackEvents();
         }
 
+        /// <summary>Castle the black king.</summary>
+        /// <param name="longCastle">Whether or not you are long castling. True means long castling, false means short castling.</param>
         public void CastleBlack(bool longCastle)
         {
             if (longCastle)
@@ -486,6 +523,8 @@ namespace WOCChess.Game
             WhiteEvents();
         }
 
+        /// <summary>Move the white king.</summary>
+        /// <param name="king">The position you are moving the white king to.</param>
         public void MoveWhiteKing(ulong king)
         {
             #if verification
@@ -499,6 +538,8 @@ namespace WOCChess.Game
             BlackEvents();
         }
 
+        /// <summary>Move the black king.</summary>
+        /// <param name="king">The position you are moving the black king to.</param>
         public void MoveBlackKing(ulong king)
         {
             #if verification
@@ -518,7 +559,7 @@ namespace WOCChess.Game
         public void MoveWhitePawn(ulong previous, ulong current)
         {
             #if verification
-                if (Turn || !WhitePawns.Contains(previous) || !GetWhitePawnMoves(previous, AllWhitePieces, AllBlackPieces, this).Contains(current))
+                if (Turn || !WhitePawns.Contains(previous) || !GetWhitePawnMoves(previous, AllWhitePieces, AllBlackPieces, this).Contains(current) || Bitboard.MaskRank(Rank.R7).Contains(current))
                 {
                     return;
                 }
@@ -538,7 +579,7 @@ namespace WOCChess.Game
         public void MoveBlackPawn(ulong previous, ulong current)
         {
             #if verification
-                if (Turn || !BlackPawns.Contains(previous) || !GetBlackPawnMoves(previous, AllBlackPieces, AllWhitePieces, this).Contains(current))
+                if (Turn || !BlackPawns.Contains(previous) || !GetBlackPawnMoves(previous, AllBlackPieces, AllWhitePieces, this).Contains(current) || Bitboard.MaskRank(Rank.R2).Contains(current))
                 {
                     return;
                 }
