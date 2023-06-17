@@ -93,7 +93,8 @@ namespace WOCChess.Game
             }
         }
 
-        public void Default()
+        /// <summary>Set all pieces to their default positions.</summary>
+        public Game Default()
         {
             WhitePawns = 0B_000000000000000000000000000000000000000000000000_11111111_00000000UL;
             WhiteRooks = 0B_000000000000000000000000000000000000000000000000_00000000_10000001UL;
@@ -109,13 +110,16 @@ namespace WOCChess.Game
             BlackQueens = 0b_00001000_00000000_000000000000000000000000000000000000000000000000UL;
             BlackKing = 0b_00010000_00000000_000000000000000000000000000000000000000000000000UL;
             BlackEPPawns = 0b_00000000_00000000_000000000000000000000000000000000000000000000000UL;
+            return this;
         }
 
+        /// <summary>Start the chess game.</summary>
         public void Start()
         {
             WhiteToMove?.Invoke(false);
         }
 
+        /// <summary>Check all events directly following black's move. Do not call this method if you are using the move methods provided in the Game class.</summary>
         public void WhiteEvents()
         {
             FullMoves++;
@@ -148,6 +152,7 @@ namespace WOCChess.Game
             }
         }
 
+        /// <summary>Check all events directly following white's move. Do not call this method if you are using the move methods provided in the Game class.</summary>
         public void BlackEvents()
         {
             BlackEPPawns = 0;
@@ -179,14 +184,8 @@ namespace WOCChess.Game
             }
         }
 
-        public void BlackCheckMate()
-        {
-            if (ValidMoves.KingMoves(BlackKing, GetWhiteChecks()) == 0)
-            {
-                GameEnd?.Invoke(0);
-            }
-        }
-
+        /// <summary>Get all legal white moves, with or without the white king.</summary>
+        /// <param name="king">Whether to include the white king. True means include, false means exclude.</param>
         public ulong GetWhiteMoves(bool king = true)
         {
             ulong whiteMoves = GetWhitePawnMoves(WhitePawns) | ValidMoves.KnightChecks(WhiteKnights);
@@ -218,6 +217,7 @@ namespace WOCChess.Game
             return whiteMoves;
         }
 
+        /// <summary>Get all white piece threats.</summary>
         public ulong GetWhiteChecks()
         {
             ulong whiteChecks = ValidMoves.WhitePawnChecks(WhitePawns) | ValidMoves.KnightChecks(WhiteKnights) | ValidMoves.KingChecks(WhiteKing);
@@ -245,6 +245,7 @@ namespace WOCChess.Game
             return whiteChecks;
         }
 
+        /// <summary>Get all sliding white piece threats.</summary>
         public ulong GetWhitePins()
         {
             ulong whiteChecks = 0;
@@ -272,6 +273,8 @@ namespace WOCChess.Game
             return whiteChecks;
         }
 
+        /// <summary>Get all legal black moves, with or without the black king.</summary>
+        /// <param name="king">Whether to include the black king. True means include, false means exclude.</param>
         public ulong GetBlackMoves(bool king = true)
         {
             ulong blackMoves = GetBlackPawnMoves(BlackPawns) | ValidMoves.KnightChecks(BlackKnights);

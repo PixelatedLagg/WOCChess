@@ -1,5 +1,6 @@
 todo:
-    -finish castling
+    -add all pawn moves when promoting
+    -verify all attacks following any possible attack move
 
 
 
