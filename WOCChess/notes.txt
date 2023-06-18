@@ -1,0 +1,10 @@
+todo:
+    -add all pawn moves when promoting
+    -implement turn field
+
+
+BitBoards[piece] &= ~(1UL << from); //reset bit at previous position
+BitBoards[piece] |= 1UL << to; //set bit at current position
+
+game.WhiteRooks |= temp >> 8; //add temp rook
+game.WhiteRooks ^= rook; //remove previous rook
