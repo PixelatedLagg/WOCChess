@@ -461,28 +461,28 @@ namespace WOCChess.Game
         /// <summary>Promote a white pawn.</summary>
         /// <param name="pawn">The position of the white pawn to promote.</param>
         /// <param name="promotionPiece">The piece to promote to.</param>
-        public void PromoteWhite(ulong pawn, PromotionPiece promotionPiece)
+        public void PromoteWhite(ulong previous, ulong current, PromotionPiece promotionPiece)
         {
             #if verification
-                if (!Turn || !WhitePawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R7).Contains(pawn))
+                if (!Turn || !WhitePawns.Contains(previous) || !Bitboard.MaskRank(Rank.R7).Contains(previous) || !GetWhitePawnMoves(previous).Contains(current))
                 {
                     return;
                 }
             #endif
-            WhitePawns ^= pawn;
+            WhitePawns ^= previous;
             switch (promotionPiece)
             {
                 case PromotionPiece.Knight:
-                    WhiteKnights |= pawn;
+                    WhiteKnights |= current;
                     break;
                 case PromotionPiece.Bishop:
-                    WhiteBishops |= pawn;
+                    WhiteBishops |= current;
                     break;
                 case PromotionPiece.Rook:
-                    WhiteRooks |= pawn;
+                    WhiteRooks |= current;
                     break;
                 case PromotionPiece.Queen:
-                    WhiteQueens |= pawn;
+                    WhiteQueens |= current;
                     break;
             }
             HalfMoves = 0;
@@ -492,28 +492,28 @@ namespace WOCChess.Game
         /// <summary>Promote a black pawn.</summary>
         /// <param name="pawn">The position of the black pawn to promote.</param>
         /// <param name="promotionPiece">The piece to promote to.</param>
-        public void PromoteBlack(ulong pawn, PromotionPiece promotionPiece)
+        public void PromoteBlack(ulong previous, ulong current, PromotionPiece promotionPiece)
         {
             #if verification
-                if (turn || !BlackPawns.Contains(pawn) || !Bitboard.MaskRank(Rank.R2).Contains(pawn))
+                if (turn || !BlackPawns.Contains(previous) || !Bitboard.MaskRank(Rank.R2).Contains(previous) || !GetBlackPawnMoves(previous).Contains(current))
                 {
                     return;
                 }
             #endif
-            BlackPawns ^= pawn;
+            BlackPawns ^= previous;
             switch (promotionPiece)
             {
                 case PromotionPiece.Knight:
-                    BlackKnights |= pawn;
+                    BlackKnights |= current;
                     break;
                 case PromotionPiece.Bishop:
-                    BlackBishops |= pawn;
+                    BlackBishops |= current;
                     break;
                 case PromotionPiece.Rook:
-                    BlackRooks |= pawn;
+                    BlackRooks |= current;
                     break;
                 case PromotionPiece.Queen:
-                    BlackQueens |= pawn;
+                    BlackQueens |= current;
                     break;
             }
             HalfMoves = 0;
