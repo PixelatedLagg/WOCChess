@@ -169,7 +169,14 @@ namespace WOCChess.Game
         /// <summary>Start the chess game.</summary>
         public void Start()
         {
-            WhiteToMove?.Invoke(false);
+            if (Turn)
+            {
+                WhiteEvents();
+            }
+            else
+            {
+                BlackEvents();
+            }
         }
 
         /// <summary>Check all events directly following black's move. Do not call this method if you are using the move methods provided in the Game class.</summary>
@@ -177,6 +184,7 @@ namespace WOCChess.Game
         {
             FullMoves++;
             WhiteEPPawn = 0;
+            Turn = true;
             if (HalfMoves == 100)
             {
                 GameEnd?.Invoke(2);
@@ -209,11 +217,12 @@ namespace WOCChess.Game
         public void BlackEvents()
         {
             BlackEPPawn = 0;
+            Turn = false;
             if (HalfMoves == 100)
             {
                 GameEnd?.Invoke(2);
             }
-            if (GetWhiteChecks().Contains(WhiteKing))
+            if (GetWhiteChecks().Contains(BlackKing))
             {
                 if (GetBlackMoves() == 0)
                 {

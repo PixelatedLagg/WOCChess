@@ -1,5 +1,4 @@
 todo:
-    -add all pawn moves when promoting
     -implement turn field
 
 
