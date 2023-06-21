@@ -1,5 +1,4 @@
 todo:
-    -implement turn field
 
 
 BitBoards[piece] &= ~(1UL << from); //reset bit at previous position
