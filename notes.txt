@@ -1,5 +1,6 @@
 todo:
-
+    -finish docu
+    -then AI TIME BABYYYYYY
 
 BitBoards[piece] &= ~(1UL << from); //reset bit at previous position
 BitBoards[piece] |= 1UL << to; //set bit at current position
