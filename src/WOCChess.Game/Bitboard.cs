@@ -2,6 +2,7 @@ using System.Numerics;
 
 namespace WOCChess.Game
 {
+    /// <summary>Utilities for working with bitboards.</summary>
     public static class Bitboard
     {
         public static void Debug(ulong board)
