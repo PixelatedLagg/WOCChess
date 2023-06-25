@@ -1,9 +1,8 @@
 todo:
     -finish docu
     -then AI TIME BABYYYYYY
+    -add pgn parsing
 
-BitBoards[piece] &= ~(1UL << from); //reset bit at previous position
-BitBoards[piece] |= 1UL << to; //set bit at current position
 
 game.WhiteRooks |= temp >> 8; //add temp rook
 game.WhiteRooks ^= rook; //remove previous rook

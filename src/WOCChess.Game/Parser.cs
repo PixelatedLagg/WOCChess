@@ -1,7 +1,10 @@
 namespace WOCChess.Game
 {
+    /// <summary>Provides parsing for loading into Games in a custom position.</summary>
     public static class Parser
     {
+        /// <summary>Load a Game at a position defined by a FEN string.</summary>
+        /// <param name="fen">The FEN string to grab the position from.</param>
         public static Game LoadFEN(string fen)
         {
             Game game = new Game();

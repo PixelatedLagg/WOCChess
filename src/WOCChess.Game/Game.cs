@@ -1,5 +1,6 @@
 namespace WOCChess.Game
 {
+    /// <summary>Represents a chess game with an event system.</summary>
     public class Game
     {
 

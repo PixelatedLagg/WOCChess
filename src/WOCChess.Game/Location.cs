@@ -1,5 +1,6 @@
 namespace WOCChess.Game
 {
+    /// <summary>Each rank of the chess board. R1 being at the bottom, and R8 being at the top.</summary>
     public enum Rank
     {
         R1,
@@ -12,6 +13,7 @@ namespace WOCChess.Game
         R8,
     }
 
+    /// <summary>Each file of the chess board. A being at the left, and H being at the right.</summary>
     public enum File
     {
         A,

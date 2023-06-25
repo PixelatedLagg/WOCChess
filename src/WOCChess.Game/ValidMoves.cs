@@ -1,9 +1,16 @@
 namespace WOCChess.Game
 {
+    /// <summary>Utilities for calculating valid moves.</summary>
     public static class ValidMoves
     {
+        /// <summary>Calculate all queen checks from a given position.</summary>
+        /// <param name="queen">The queen's position.</param>
+        /// <param name="allPieces">The position of all the other pieces.</param>
         public static ulong QueenChecks(ulong queen, ulong allPieces) => BishopChecks(queen, allPieces) | RookChecks(queen, allPieces);
 
+        /// <summary>Calculate all rook checks from a given position.</summary>
+        /// <param name="rook">The rook's position.</param>
+        /// <param name="allPieces">The position of all the other pieces.</param>
         public static ulong RookChecks(ulong rook, ulong allPieces)
         {
             ulong validMoves = 0;
@@ -54,6 +61,9 @@ namespace WOCChess.Game
             return validMoves;
         }
 
+        /// <summary>Calculate all bishop checks from a given position.</summary>
+        /// <param name="bishop">The bishop's position.</param>
+        /// <param name="allPieces">The position of all the other pieces.</param>
         public static ulong BishopChecks(ulong bishop, ulong allPieces)
         {
             ulong validMoves = 0;
@@ -104,6 +114,8 @@ namespace WOCChess.Game
             return validMoves;
         }
 
+        /// <summary>Calculate all knight checks from a given position.</summary>
+        /// <param name="knight">The knight's position.</param>
         public static ulong KnightChecks(ulong knight)
         {
             return ((knight & Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B)) << 6 | (knight & Bitboard.ClearFile(File.A)) << 15 | (knight & Bitboard.ClearFile(File.H)) << 17 
@@ -111,6 +123,8 @@ namespace WOCChess.Game
             | (knight & Bitboard.ClearFile(File.H)) >> 15 | (knight & Bitboard.ClearFile(File.A)) >> 17 | (knight & Bitboard.ClearFile(File.A) & Bitboard.ClearFile(File.B)) >> 10);
         }
 
+        /// <summary>Calculate all king checks from a given position.</summary>
+        /// <param name="queen">The king's position.</param>
         public static ulong KingChecks(ulong king)
         {
             ulong kingClipFileH = Bitboard.ClearFile(File.H) & king;
@@ -118,6 +132,9 @@ namespace WOCChess.Game
             return (kingClipFileA << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileH >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1);
         }
 
+        /// <summary>Calculate all king moves from a given position.</summary>
+        /// <param name="king">The king's position.</param>
+        /// <param name="otherChecks">All of the opposite side's checks.</param>
         public static ulong KingMoves(ulong king, ulong otherChecks)
         {
             ulong kingClipFileH = Bitboard.ClearFile(File.H) & king;
@@ -125,16 +142,25 @@ namespace WOCChess.Game
             return (kingClipFileA << 7 | king << 8 | kingClipFileH << 9 | kingClipFileH << 1 | kingClipFileH >> 7 | king >> 8 | kingClipFileA >> 9 | kingClipFileA >> 1) & ~otherChecks;
         }
 
+        /// <summary>Calculate all white pawn checks from a given position.</summary>
+        /// <param name="pawn">The white pawn's position.</param>
         public static ulong WhitePawnChecks(ulong pawn)
         {
             return ((Bitboard.ClearFile(File.A) & pawn) << 7) | ((Bitboard.ClearFile(File.H) & pawn) << 9);
         }
 
+        /// <summary>Calculate all black pawn checks from a given position.</summary>
+        /// <param name="pawn">The black pawn's position.</param>
         public static ulong BlackPawnChecks(ulong pawn)
         {
             return ((Bitboard.ClearFile(File.A) & pawn) >> 7) | ((Bitboard.ClearFile(File.H) & pawn) >> 9);
         }
 
+        /// <summary>Calculate all white rook moves from a given position.</summary>
+        /// <param name="rook">The white rook's position.</param>
+        /// <param name="friendly">The position of all friendly pieces.</param>
+        /// <param name="enemy">The position of all enemy pieces.</param>
+        /// <param name="game">The Game to calculate the moves from.</param>
         public static ulong RookMovesWhite(ulong rook, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
         {
             ulong validMoves = 0;
@@ -240,7 +266,13 @@ namespace WOCChess.Game
             }
             return validMoves;
         }
-        public static ulong RookMovesBlack(ulong rook, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
+
+        /// <summary>Calculate all black rook moves from a given position.</summary>
+        /// <param name="rook">The black rook's position.</param>
+        /// <param name="friendly">The position of all friendly pieces.</param>
+        /// <param name="enemy">The position of all enemy pieces.</param>
+        /// <param name="game">The Game to calculate the moves from.</param>
+        public static ulong RookMovesBlack(ulong rook, ulong friendly, ulong enemy, Game game)
         {
             ulong validMoves = 0;
             ulong temp = rook; //for down
@@ -346,7 +378,12 @@ namespace WOCChess.Game
             return validMoves;
         }
 
-        public static ulong BishopMovesWhite(ulong bishop, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
+        /// <summary>Calculate all white bishop moves from a given position.</summary>
+        /// <param name="bishop">The white bishop's position.</param>
+        /// <param name="friendly">The position of all friendly pieces.</param>
+        /// <param name="enemy">The position of all enemy pieces.</param>
+        /// <param name="game">The Game to calculate the moves from.</param>
+        public static ulong BishopMovesWhite(ulong bishop, ulong friendly, ulong enemy, Game game)
         {
             ulong validMoves = 0;
             ulong temp = bishop; //for top left
@@ -452,6 +489,11 @@ namespace WOCChess.Game
             return validMoves;
         }
 
+        /// <summary>Calculate all black bishop moves from a given position.</summary>
+        /// <param name="bishop">The black bishop's position.</param>
+        /// <param name="friendly">The position of all friendly pieces.</param>
+        /// <param name="enemy">The position of all enemy pieces.</param>
+        /// <param name="game">The Game to calculate the moves from.</param>
         public static ulong BishopMovesBlack(ulong bishop, ulong friendly, ulong enemy, Game game) //need to add discovered check verification
         {
             ulong validMoves = 0;
@@ -558,7 +600,18 @@ namespace WOCChess.Game
             return validMoves;
         }
 
+        /// <summary>Calculate all white queen moves from a given position.</summary>
+        /// <param name="queen">The white queen's position.</param>
+        /// <param name="friendly">The position of all friendly pieces.</param>
+        /// <param name="enemy">The position of all enemy pieces.</param>
+        /// <param name="game">The Game to calculate the moves from.</param>
         public static ulong QueenMovesWhite(ulong queen, ulong friendly, ulong enemy, Game game) => RookMovesWhite(queen, friendly, enemy, game) | BishopMovesWhite(queen, friendly, enemy, game);
+        
+        /// <summary>Calculate all black queen moves from a given position.</summary>
+        /// <param name="queen">The black queen's position.</param>
+        /// <param name="friendly">The position of all friendly pieces.</param>
+        /// <param name="enemy">The position of all enemy pieces.</param>
+        /// <param name="game">The Game to calculate the moves from.</param>
         public static ulong QueenMovesBlack(ulong queen, ulong friendly, ulong enemy, Game game) => RookMovesBlack(queen, friendly, enemy, game) | BishopMovesBlack(queen, friendly, enemy, game);
     }
 }
